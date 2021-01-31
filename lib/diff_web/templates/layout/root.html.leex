@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= csrf_meta_tag() %>
+    <%= live_title_tag assigns[:page_title] || "Home", suffix: " | Diff" %>
+    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  </head>
+  <body class="bg-gray-100">
+    <header>
+      <nav role="navigation" class="flex w-full justify-center my-6">
+        <%= link "Diff",
+          to: Routes.diff_path(@conn, :index),
+          class: active_class(@conn, Routes.diff_path(@conn, :index))
+        %>
+        <%= link "Source",
+          to: "/source",
+          class: active_class(@conn, "/source")
+        %>
+      </nav>
+    </header>
+    <%= @inner_content %>
+  </body>
+</html>
