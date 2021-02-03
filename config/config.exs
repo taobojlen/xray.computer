@@ -10,8 +10,6 @@ use Mix.Config
 config :diff,
   ecto_repos: [Diff.Repo]
 
-config :diff, Diff.Repo, migration_timestamps: [type: :utc_datetime]
-
 # Configures the endpoint
 config :diff, DiffWeb.Endpoint,
   url: [host: "localhost"],
@@ -27,9 +25,6 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
-
-# Use hackney (rather than the default httpc) in Tesla
-config :tesla, adapter: Tesla.Adapter.Hackney
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

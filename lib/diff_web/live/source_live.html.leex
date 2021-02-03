@@ -1,0 +1,48 @@
+<section class="flex flex-col items-center justify-center w-80">
+  <h1 class="text-xl text-bold mb-10">View source</h1>
+
+  <form phx-change="type">
+    <div class="flex flex-col w-full items-center">
+      <input
+        id="package"
+        type="text"
+        name="p"
+        value="<%= @package %>"
+        placeholder="Select a package"
+        autocomplete="off"
+        phx-debounce="300"
+        class="block p-2 mb-2 w-48 rounded shadow focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
+      />
+    </div>
+    <%= if length(@suggestions) > 0 do %>
+      <p class="text-sm">Did you mean?</p>
+    <% end %>
+    <%= for suggestion <- @suggestions do %>
+      <span
+        class="bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1"
+      ><%= suggestion %></span>
+    <% end %>
+  </form>
+
+  <%= if length(@versions) > 0 do %>
+    <form phx-change="select_version" class="mt-6">
+      <label for="versions" class="text-sm text-gray-600">Version</label>
+      <select
+        name="v"
+        id="versions"
+        value="<%= @version %>"
+        class="select mb-2 w-48"
+      >
+        <%= for version <- @versions do %>
+          <option value="<%= version %>"><%= version %></option>
+        <% end %>
+        <i class="fas fa-circle" />
+      </select>
+    </form>
+
+    <button
+      phx-click="select"
+      class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+    >View source</button>
+  <% end %>
+</section>

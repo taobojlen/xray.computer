@@ -5,6 +5,7 @@ defmodule Diff.Package do
   schema "packages" do
     field :last_updated, :utc_datetime
     field :name, :string
+    has_many :versions, Diff.Version
 
     timestamps()
   end
