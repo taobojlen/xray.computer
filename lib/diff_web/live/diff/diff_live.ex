@@ -1,6 +1,6 @@
 defmodule DiffWeb.DiffLive do
   use DiffWeb, :live_view
-  alias Diff.Repo
+  alias Diff.{Repo, Registry}
   alias Diff.Package
   import Ecto.Query
 
@@ -11,7 +11,7 @@ defmodule DiffWeb.DiffLive do
 
   @impl true
   def handle_event("suggest", %{"q" => query}, socket) do
-    with {:ok, packages} <- Diff.Registry.Npm.search(query) do
+    with {:ok, packages} <- Registry.Npm.search(query) do
       {:noreply, assign(socket, results: packages, query: query)}
     end
   end

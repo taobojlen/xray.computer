@@ -1,5 +1,5 @@
-defmodule DiffWeb.SourceLive do
-  alias Diff.{Package, Repo, Version}
+defmodule DiffWeb.SelectSourceLive do
+  alias Diff.{Packages, Registry, Repo}
   import Ecto.Query
   use DiffWeb, :live_view
 
@@ -29,6 +29,17 @@ defmodule DiffWeb.SourceLive do
   end
 
   @impl true
+  def handle_event("select_package", %{"package" => package}, socket) do
+    case get_versions(package) do
+      {:ok, versions} ->
+        {:noreply, assign(socket, package: package, versions: versions, version: hd(versions))}
+
+      _ ->
+        {:noreply, assign(socket, package: nil, versions: nil, version: nil)}
+    end
+  end
+
+  @impl true
   def handle_event("select_version", %{"v" => version}, socket) do
     {:noreply, assign(socket, version: version)}
   end
@@ -39,16 +50,18 @@ defmodule DiffWeb.SourceLive do
   end
 
   defp get_suggestions(query) do
-    with {:ok, packages} <- Diff.Registry.Npm.search(query) do
+    with {:ok, packages} <- Registry.Npm.search(query) do
       Enum.each(packages, fn package ->
-        Repo.insert(%Package{name: package}, on_conflict: :nothing)
+        Packages.create_package(%{name: package, registry: "npm"}, on_conflict: :nothing)
       end)
 
-      Enum.slice(packages, 0, 3)
+      packages
+      |> Enum.filter(fn package -> package != query end)
+      |> Enum.slice(0, 3)
     end
   end
 
   defp get_versions(package) do
-    Diff.Registry.Npm.versions(package)
+    Registry.Npm.versions(package)
   end
 end

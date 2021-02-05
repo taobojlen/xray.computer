@@ -1,0 +1,5 @@
+<h1>Edit Package</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.package_path(@conn, :update, @package)) %>
+
+<span><%= link "Back", to: Routes.package_path(@conn, :index) %></span>

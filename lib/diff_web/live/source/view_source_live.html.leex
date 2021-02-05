@@ -1,0 +1,9 @@
+<section class="flex flex-col items-center justify-center w-80">
+  <h1 class="text-xl text-bold mb-10">View source</h1>
+
+  <%= if @loading do %>
+      <div style="border-top-color:transparent" class="border-solid animate-spin rounded-full border-blue-400 border-2 h-16 w-16"></div>
+      <span class="mt-4">Fetching source code from <%= @registry %>...</span>
+  <% end %>
+
+</section>

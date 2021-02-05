@@ -4,10 +4,13 @@ defmodule Diff.Repo.Migrations.CreatePackages do
   def change do
     create table(:packages) do
       add :name, :string, null: false
-      add :last_updated, :utc_datetime
+      add :registry, :string, null: false
+      add :versions_updated_at, :utc_datetime
 
       timestamps()
     end
+
+    create unique_index(:packages, [:name, :registry])
 
   end
 end

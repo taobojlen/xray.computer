@@ -1,6 +1,13 @@
 defmodule Diff.Registry.Npm do
+  @moduledoc """
+  A Registry module to interface with npm.
+  """
   alias Diff.{Registry, Util}
+  alias Diff.Packages.{Package, Version}
+  alias Ecto.Changeset
   use HTTPoison.Base
+
+  # TODO: cache responses from npm
 
   @behaviour Registry
 
@@ -28,9 +35,34 @@ defmodule Diff.Registry.Npm do
   end
 
   @impl Registry
-  def versions(package) do
+  def get_package(name) do
+    case get("/" <> name) do
+      {:ok, %{body: %{"name" => returned_name}}} ->
+        if returned_name == name do
+          versions = get_versions(name)
+
+          changeset =
+            %Package{}
+            |> Package.changeset(%{
+              name: name,
+              registry: "npm",
+              versions_updated_at: DateTime.utc_now()
+            })
+            |> Changeset.put_assoc(:versions, versions)
+
+          {:ok, changeset}
+        else
+          {:error, "package does not exist"}
+        end
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  @impl Registry
+  def get_versions(package) do
     case get("/" <> package) do
-      # TODO: better sorting
       {:ok, response} ->
         {:ok, maybe_get_versions(response.body)}
 
@@ -40,13 +72,13 @@ defmodule Diff.Registry.Npm do
   end
 
   @impl Registry
-  def get_package(package, version) do
+  def get_source(package, version) do
     tarball_path = Util.tmp_path("tarball")
 
     with {:ok, url} <- get_tarball_url(package, version) do
       File.touch!(tarball_path)
-      # Download as a stream
-      get_stream!(url)
+
+      Util.get_stream!(url)
       |> Stream.into(File.stream!(tarball_path))
       |> Stream.run()
 
@@ -85,41 +117,21 @@ defmodule Diff.Registry.Npm do
     end
   end
 
-  defp get_stream!(url, timeout \\ 30_000) do
-    Stream.resource(
-      fn -> HTTPoison.get!(url, %{}, stream_to: self(), async: :once) end,
-      fn %HTTPoison.AsyncResponse{id: id} = resp ->
-        receive do
-          %HTTPoison.AsyncStatus{id: ^id} ->
-            HTTPoison.stream_next(resp)
-            {[], resp}
-
-          %HTTPoison.AsyncHeaders{id: ^id} ->
-            HTTPoison.stream_next(resp)
-            {[], resp}
-
-          %HTTPoison.AsyncChunk{id: ^id, chunk: chunk} ->
-            HTTPoison.stream_next(resp)
-            {[chunk], resp}
-
-          %HTTPoison.AsyncEnd{id: ^id} ->
-            {:halt, resp}
-        after
-          timeout -> raise "download tarball timeout"
-        end
-      end,
-      fn resp -> :hackney.stop_async(resp.id) end
-    )
-  end
-
   defp maybe_get_versions(nil) do
     []
   end
 
   defp maybe_get_versions(body) do
     case body do
-      %{"versions" => versions} ->
-        versions |> Map.keys() |> Enum.sort() |> Enum.reverse()
+      %{"time" => time} ->
+        time
+        |> Enum.map(fn {version, released_at} ->
+          %Version{
+            version: version,
+            released_at: DateTime.from_iso8601(released_at)
+          }
+        end)
+        |> Enum.sort_by(fn %{released_at: released_at} -> released_at end)
 
       _ ->
         []

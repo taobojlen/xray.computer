@@ -19,7 +19,9 @@
     <% end %>
     <%= for suggestion <- @suggestions do %>
       <span
-        class="bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1"
+        phx-click="select_package"
+        phx-value-package="<%= suggestion %>"
+        class="bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
       ><%= suggestion %></span>
     <% end %>
   </form>
@@ -30,7 +32,6 @@
       <select
         name="v"
         id="versions"
-        value="<%= @version %>"
         class="select mb-2 w-48"
       >
         <%= for version <- @versions do %>

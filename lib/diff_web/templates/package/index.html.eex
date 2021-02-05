@@ -1,0 +1,30 @@
+<h1>Listing Packages</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Registry</th>
+      <th>Versions updated at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for package <- @packages do %>
+    <tr>
+      <td><%= package.name %></td>
+      <td><%= package.registry %></td>
+      <td><%= package.versions_updated_at %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.package_path(@conn, :show, package) %></span>
+        <span><%= link "Edit", to: Routes.package_path(@conn, :edit, package) %></span>
+        <span><%= link "Delete", to: Routes.package_path(@conn, :delete, package), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Package", to: Routes.package_path(@conn, :new) %></span>

@@ -1,0 +1,18 @@
+<h1>Show Version</h1>
+
+<ul>
+
+  <li>
+    <strong>Version:</strong>
+    <%= @version.version %>
+  </li>
+
+  <li>
+    <strong>Released at:</strong>
+    <%= @version.released_at %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.version_path(@conn, :edit, @version) %></span>
+<span><%= link "Back", to: Routes.version_path(@conn, :index) %></span>

@@ -1,0 +1,23 @@
+<h1>Show Package</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @package.name %>
+  </li>
+
+  <li>
+    <strong>Registry:</strong>
+    <%= @package.registry %>
+  </li>
+
+  <li>
+    <strong>Versions updated at:</strong>
+    <%= @package.versions_updated_at %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.package_path(@conn, :edit, @package) %></span>
+<span><%= link "Back", to: Routes.package_path(@conn, :index) %></span>
