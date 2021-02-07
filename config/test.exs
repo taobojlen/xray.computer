@@ -1,5 +1,8 @@
 use Mix.Config
 
+config :diff,
+  registry: Diff.MockRegistry
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
@@ -11,6 +14,8 @@ config :diff, Diff.Repo,
   database: "diff_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :diff, Oban, queues: false, plugins: false
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

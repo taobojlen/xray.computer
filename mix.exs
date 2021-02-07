@@ -55,8 +55,10 @@ defmodule Diff.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:hackney, "~> 1.17"},
       {:httpoison, "~> 1.8"},
+      {:oban, "~> 2.4"},
       {:credo, "~> 1.5", only: :dev},
-      {:exvcr, "~> 0.12.2", only: :test}
+      {:exvcr, "~> 0.12.2", only: :test},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 

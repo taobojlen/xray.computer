@@ -1,45 +1,53 @@
 defmodule DiffWeb.ViewSourceLive do
   use DiffWeb, :live_view
-  import Ecto.Query
-  alias Diff.{Packages, Registry, Repo}
   alias Diff.Packages.{Package, Version}
+  alias Diff.{Packages, Registry, Repo}
 
   @impl true
   def mount(%{"package" => package, "version" => version}, _session, socket) do
-    package = Package.get_by(registry: "npm", name: package)
-    version = Version.get_by(package: package, version: version)
+    registry = "npm"
+
+    package = Repo.get_by(Package, registry: registry, name: package)
+
+    version =
+      if is_nil(package) do
+        nil
+      else
+        Repo.get_by(Version, package_id: package.id, version: version)
+      end
 
     cond do
       is_nil(package) ->
-        mount_loading_state(socket)
-        fetch_package("npm", package)
+        # attempt to get the package and version
+        mount_loading_state(socket, registry)
+
+      is_nil(version) ->
+        # attempt to get the version
+        mount_loading_state(socket, registry)
+
+      is_nil(version.source_uri) ->
+        # attempt to get the source code
+        mount_loading_state(socket, registry)
+
+      true ->
+        # we have everything; render it
+        # TODO: create Source context to handle this
+        source = File.read!(version.source_path)
+        {:ok, assign(socket, registry: registry, loading: false, source: source)}
     end
-
-    if connected?(socket), do: Packages.subscribe(package, version)
-
-    {:ok, assign(socket, loading: true, registry: "npm")}
   end
 
   @impl true
   def handle_info({Packages, [:versions, :created], version}, socket) do
-    {:noreply, assign(socket, loading: false, source: version.source_path)}
+    {:noreply, assign(socket, loading: false, source: version.source_uri)}
   end
 
-  defp mount_loading_state(socket) do
-    {:ok, assign(socket, loading: true, registry: "npm")}
+  @impl true
+  def handle_info({Packages, [:versions, :does_not_exist]}, socket) do
+    {:noreply, assign(socket, loading: false, does_not_exist: true)}
   end
 
-  defp fetch_package(registry, package) do
-    case Registry.Npm.versions(package) do
-      {:ok, versions} ->
-        Packages.create_package(%{registry: registry, name: package})
-    end
-  end
-
-  defp fetch_source_code(version) do
-    with {:ok, path} <- Diff.Registry.Npm.get_package(version.package, version.version) do
-      IO.puts(path)
-      Packages.update_version(version, %{source_path: path})
-    end
+  defp mount_loading_state(socket, registry) do
+    {:ok, assign(socket, registry: registry, loading: true)}
   end
 end

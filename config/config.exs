@@ -8,7 +8,18 @@
 use Mix.Config
 
 config :diff,
-  ecto_repos: [Diff.Repo]
+  ecto_repos: [Diff.Repo],
+  tmp_dir: "/tmp/diff",
+  registry: Diff.Registry
+
+config :diff, :bucket,
+  implementation: Diff.Storage.Local,
+  name: "diff"
+
+config :diff, Oban,
+  repo: Diff.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [source_fetcher: 5]
 
 # Configures the endpoint
 config :diff, DiffWeb.Endpoint,

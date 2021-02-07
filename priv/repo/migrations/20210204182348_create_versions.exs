@@ -5,7 +5,8 @@ defmodule Diff.Repo.Migrations.CreateVersions do
     create table(:versions) do
       add :version, :string, null: false
       add :released_at, :utc_datetime
-      add :source_path, :string
+      add :source_uri, :string
+      add :tarball_url, :string
       add :package_id, references(:packages, on_delete: :delete_all), null: false
 
       timestamps()

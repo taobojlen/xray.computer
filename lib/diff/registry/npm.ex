@@ -9,7 +9,7 @@ defmodule Diff.Registry.Npm do
 
   # TODO: cache responses from npm
 
-  @behaviour Registry
+  @behaviour Registry.API
 
   @impl HTTPoison.Base
   def process_request_url(url) do
@@ -22,7 +22,7 @@ defmodule Diff.Registry.Npm do
     |> Jason.decode!()
   end
 
-  @impl Registry
+  @impl true
   def search(query) do
     case get("/-/v1/search?size=10&text=" <> query) do
       {:ok, response} ->
@@ -34,23 +34,23 @@ defmodule Diff.Registry.Npm do
     end
   end
 
-  @impl Registry
+  @impl true
   def get_package(name) do
     case get("/" <> name) do
       {:ok, %{body: %{"name" => returned_name}}} ->
         if returned_name == name do
-          versions = get_versions(name)
+          with {:ok, versions} <- get_versions(name) do
+            changeset =
+              %Package{}
+              |> Package.changeset(%{
+                name: name,
+                registry: "npm",
+                versions_updated_at: DateTime.utc_now()
+              })
+              |> Changeset.put_assoc(:versions, versions)
 
-          changeset =
-            %Package{}
-            |> Package.changeset(%{
-              name: name,
-              registry: "npm",
-              versions_updated_at: DateTime.utc_now()
-            })
-            |> Changeset.put_assoc(:versions, versions)
-
-          {:ok, changeset}
+            {:ok, changeset}
+          end
         else
           {:error, "package does not exist"}
         end
@@ -60,7 +60,7 @@ defmodule Diff.Registry.Npm do
     end
   end
 
-  @impl Registry
+  @impl true
   def get_versions(package) do
     case get("/" <> package) do
       {:ok, response} ->
@@ -71,7 +71,7 @@ defmodule Diff.Registry.Npm do
     end
   end
 
-  @impl Registry
+  @impl true
   def get_source(package, version) do
     tarball_path = Util.tmp_path("tarball")
 
@@ -125,13 +125,19 @@ defmodule Diff.Registry.Npm do
     case body do
       %{"time" => time} ->
         time
-        |> Enum.map(fn {version, released_at} ->
-          %Version{
-            version: version,
-            released_at: DateTime.from_iso8601(released_at)
-          }
+        |> Enum.filter(fn {version, _released_at} ->
+          not Enum.member?(["created", "modified"], version)
         end)
-        |> Enum.sort_by(fn %{released_at: released_at} -> released_at end)
+        |> Enum.map(fn {version, released_at} ->
+          with {:ok, timestamp, _offset} <- DateTime.from_iso8601(released_at) do
+            %Version{
+              version: version,
+              released_at: timestamp
+            }
+          end
+        end)
+        |> Enum.sort_by(fn %{released_at: released_at} -> released_at end, DateTime)
+        |> Enum.reverse()
 
       _ ->
         []

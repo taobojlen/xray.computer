@@ -1,7 +1,7 @@
 defmodule DiffWeb.DiffLive do
-  use DiffWeb, :live_view
-  alias Diff.{Repo, Registry}
   alias Diff.Package
+  alias Diff.{Registry, Repo}
+  use DiffWeb, :live_view
   import Ecto.Query
 
   @impl true

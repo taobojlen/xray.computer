@@ -13,30 +13,22 @@ defmodule DiffWeb.SelectSourceLive do
     versions_task = Task.async(fn -> get_versions(package) end)
     suggestions_task = Task.async(fn -> get_suggestions(package) end)
 
-    case {Task.await(versions_task), Task.await(suggestions_task)} do
-      {{:ok, versions}, suggestions} ->
-        {:noreply,
-         assign(socket,
-           versions: versions,
-           version: hd(versions),
-           package: package,
-           suggestions: suggestions
-         )}
+    versions = Task.await(versions_task)
+    suggestions = Task.await(suggestions_task)
 
-      _ ->
-        {:noreply, assign(socket, versions: [], package: nil, suggestions: [])}
-    end
+    {:noreply,
+     assign(socket,
+       versions: versions,
+       version: hd(versions),
+       package: package,
+       suggestions: suggestions
+     )}
   end
 
   @impl true
   def handle_event("select_package", %{"package" => package}, socket) do
-    case get_versions(package) do
-      {:ok, versions} ->
-        {:noreply, assign(socket, package: package, versions: versions, version: hd(versions))}
-
-      _ ->
-        {:noreply, assign(socket, package: nil, versions: nil, version: nil)}
-    end
+    versions = get_versions(package)
+    {:noreply, assign(socket, package: package, versions: versions, version: hd(versions))}
   end
 
   @impl true
@@ -62,6 +54,15 @@ defmodule DiffWeb.SelectSourceLive do
   end
 
   defp get_versions(package) do
-    Registry.Npm.versions(package)
+    case Registry.Npm.get_versions(package) do
+      {:ok, versions} ->
+        versions
+        |> Enum.map(fn %{version: version} ->
+          version
+        end)
+
+      _other ->
+        []
+    end
   end
 end
