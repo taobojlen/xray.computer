@@ -5,7 +5,7 @@ defmodule Diff.Registry do
   @behaviour Diff.Registry.Behaviour
 
   @registries %{
-    :npm => Npm
+    "npm" => Npm
   }
 
   defmodule API do
@@ -42,6 +42,11 @@ defmodule Diff.Registry do
   end
 
   @impl true
+  def is_registry("npm"), do: true
+  @impl true
+  def is_registry(_other), do: false
+
+  @impl true
   def search(registry, query) do
     impl = get_registry(registry)
     impl.search(query)
@@ -56,6 +61,7 @@ defmodule Diff.Registry do
   @impl true
   def get_versions(registry, package) do
     impl = get_registry(registry)
+    # TODO: update last_updated for package
     impl.get_versions(package)
   end
 

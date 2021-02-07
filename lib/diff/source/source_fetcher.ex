@@ -6,11 +6,10 @@ defmodule Diff.Source.SourceFetcher do
   def perform(%Oban.Job{args: %{"id" => id}}) do
     version = Packages.get_version!(id)
     package = Packages.get_package!(version.package_id)
-
-    files = store_files(package, version)
-    files_list_key = save_files_list(files, package, version)
-
-    Packages.update_version(version, %{source_uri: files_list_key})
+    files_list_key = store_files(package, version)
+    Packages.update_version(version, %{source_key: files_list_key})
+    Source.notify_found_source(package.registry, package.name, version.version, files_list_key)
+    :ok
   end
 
   defp store_files(package, version) do
@@ -26,15 +25,23 @@ defmodule Diff.Source.SourceFetcher do
             filename = Path.relative_to(path, tmp_path)
             Map.put(acc, filename, path)
           end)
-          |> Enum.map(fn {filename, path} ->
-            content = File.read!(path)
-            key = Source.get_storage_key(package.registry, package.name, version.version)
-            Storage.put(key <> "/" <> filename, content)
-            filename
-          end)
+
+        files
+        |> Enum.each(fn {filename, path} ->
+          content = File.read!(path)
+          key = get_storage_key(package, version, filename)
+          Storage.put(key, content)
+        end)
 
         File.rm_rf!(tmp_path)
-        files
+
+        files =
+          Enum.reduce(files, %{}, fn {filename, _path}, acc ->
+            key = get_storage_key(package, version, filename)
+            Map.put(acc, filename, key)
+          end)
+
+        save_files_list(files, package, version)
 
       {:error, error} ->
         raise error
@@ -42,10 +49,14 @@ defmodule Diff.Source.SourceFetcher do
   end
 
   defp save_files_list(files, package, version) do
-    content = Enum.join(files, "\n")
+    content = Jason.encode!(files)
     key = Source.get_files_list_key(package.registry, package.name, version.version)
     Storage.put(key, content)
     key
+  end
+
+  defp get_storage_key(package, version, filename) do
+    Source.get_storage_key(package.registry, package.name, version.version) <> "/" <> filename
   end
 
   defp get_registry() do

@@ -6,13 +6,7 @@ defmodule Diff.Packages do
   import Ecto.Query, warn: false
   alias Diff.Repo
 
-  alias Diff.Packages.Package
-
-  @topic inspect(__MODULE__)
-
-  def subscribe(package, version) do
-    Phoenix.PubSub.subscribe(Diff.PubSub, @topic <> "#{package}-#{version}")
-  end
+  alias Diff.Packages.{Package, Version}
 
   @doc """
   Returns the list of packages.
@@ -108,8 +102,6 @@ defmodule Diff.Packages do
     Package.changeset(package, attrs)
   end
 
-  alias Diff.Packages.Version
-
   @doc """
   Returns the list of versions.
 
@@ -155,7 +147,6 @@ defmodule Diff.Packages do
     %Version{}
     |> Version.changeset(attrs)
     |> Repo.insert()
-    |> notify_subscribers([:version, :created])
   end
 
   @doc """
@@ -174,7 +165,6 @@ defmodule Diff.Packages do
     version
     |> Version.changeset(attrs)
     |> Repo.update()
-    |> notify_subscribers([:version, :updated])
   end
 
   @doc """
@@ -205,19 +195,4 @@ defmodule Diff.Packages do
   def change_version(%Version{} = version, attrs \\ %{}) do
     Version.changeset(version, attrs)
   end
-
-  defp notify_subscribers({:ok, version}, event) do
-    package = Repo.one(
-      from p in Package,
-      join: v in assoc(p, :versions),
-      where: v.id == ^version.id
-    )
-    Phoenix.PubSub.broadcast(
-      Diff.PubSub,
-      @topic <> "#{package.name}-#{version.version}",
-      {__MODULE__, event, version}
-    )
-  end
-
-  defp notify_subscribers({:error, error}, _event), do: {:error, error}
 end

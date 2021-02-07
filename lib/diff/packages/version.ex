@@ -5,7 +5,7 @@ defmodule Diff.Packages.Version do
   schema "versions" do
     field :released_at, :utc_datetime
     field :version, :string
-    field :source_uri, :string
+    field :source_key, :string
     field :tarball_url, :string
     belongs_to :package, Diff.Packages.Package
 
@@ -15,7 +15,7 @@ defmodule Diff.Packages.Version do
   @doc false
   def changeset(version, attrs) do
     version
-    |> cast(attrs, [:version, :released_at, :source_uri, :tarball_url])
+    |> cast(attrs, [:version, :released_at, :source_key, :tarball_url])
     |> validate_required([:version])
   end
 end

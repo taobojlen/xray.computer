@@ -22,7 +22,7 @@ defmodule Diff.Source.SourceFetcherTest do
       package = insert!(:package)
       version = insert!(:version, package_id: package.id)
 
-      assert :ok == perform_job(Source.SourceFetcher, %{"id" => version.id})
+      assert :ok = perform_job(Source.SourceFetcher, %{"id" => version.id})
     end
   end
 end

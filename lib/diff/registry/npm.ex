@@ -132,7 +132,7 @@ defmodule Diff.Registry.Npm do
           with {:ok, timestamp, _offset} <- DateTime.from_iso8601(released_at) do
             %Version{
               version: version,
-              released_at: timestamp
+              released_at: timestamp |> DateTime.truncate(:second)
             }
           end
         end)

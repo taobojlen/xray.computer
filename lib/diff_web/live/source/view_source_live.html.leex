@@ -1,9 +1,30 @@
 <section class="flex flex-col items-center justify-center w-80">
-  <h1 class="text-xl text-bold mb-10">View source</h1>
+  <h1 class="text-xl text-bold mb-10"><%= @package %> <%= @version %></h1>
+
+  <%= if @nonexistent do %>
+    <h2 class="text-red-600 text-bold">Not found</h2>
+  <% end %>
 
   <%= if @loading do %>
       <div style="border-top-color:transparent" class="border-solid animate-spin rounded-full border-blue-400 border-2 h-16 w-16"></div>
       <span class="mt-4">Fetching source code from <%= @registry %>...</span>
-  <% end %>
+  <% else %>
+    <form phx-change="select_file">
+      <label for="file" class="text-sm text-gray-600">File</label>
+      <select
+        name="f"
+        id="file"
+        class="select mb-10"
+      >
+        <%= for filename <- @files_list do %>
+          <option value="<%= filename %>"><%= filename %></option>
+        <% end %>
+        <i class="fas fa-circle" />
+      </select>
+    </form>
 
+    <pre>
+      <%= @content %>
+    </pre>
+  <% end %>
 </section>
