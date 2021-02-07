@@ -1,4 +1,4 @@
-<section class="flex flex-col items-center justify-center w-80">
+<section class="flex flex-col items-center justify-center">
   <h1 class="text-xl text-bold mb-10"><%= @package %> <%= @version %></h1>
 
   <%= if @nonexistent do %>
@@ -23,8 +23,15 @@
       </select>
     </form>
 
-    <pre>
-      <%= @content %>
+    <pre
+      id="code-preview"
+      class="code"
+      phx-hook="codeUpdated"
+      data-src="<%= @current_file %>"
+    >
+      <code class="language-<%= @file_type %>">
+        <%= @content %>
+      </code>
     </pre>
   <% end %>
 </section>

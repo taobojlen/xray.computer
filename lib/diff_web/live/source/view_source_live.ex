@@ -3,6 +3,17 @@ defmodule DiffWeb.ViewSourceLive do
   # alias Diff.Packages.{Package, Version}
   alias Diff.{Source, Storage}
 
+  @file_extensions %{
+    ".js" => "javascript",
+    ".md" => "markdown",
+    ".css" => "css",
+    ".sh" => "bash",
+    ".ts" => "typescript",
+    ".yaml" => "yaml",
+    ".yml" => "yaml",
+    ".scss" => "scss"
+  }
+
   @impl true
   def mount(%{"package" => package, "version" => version}, _session, socket) do
     registry = "npm"
@@ -19,7 +30,9 @@ defmodule DiffWeb.ViewSourceLive do
        nonexistent: false,
        files: %{},
        files_list: [],
-       content: nil
+       current_file: nil,
+       content: nil,
+       file_type: nil
      )}
   end
 
@@ -30,7 +43,9 @@ defmodule DiffWeb.ViewSourceLive do
       |> Map.get(filename)
       |> Storage.get()
 
-    {:noreply, assign(socket, content: content)}
+    file_type = get_file_type(filename)
+
+    {:noreply, assign(socket, content: content, current_file: filename, file_type: file_type)}
   end
 
   @impl true
@@ -58,7 +73,31 @@ defmodule DiffWeb.ViewSourceLive do
       |> Map.get(hd(files_list))
       |> Storage.get()
 
+    file_type = get_file_type(hd(files_list))
+
     {:noreply,
-     assign(socket, files: files, files_list: files_list, content: content, loading: false)}
+     assign(socket,
+       files: files,
+       files_list: files_list,
+       current_file: hd(files_list),
+       content: content,
+       file_type: file_type,
+       loading: false
+     )}
+  end
+
+  defp get_file_type(filename) do
+    potentials =
+      @file_extensions
+      |> Enum.filter(fn {extension, language} ->
+        String.ends_with?(filename, extension)
+      end)
+      |> Enum.map(fn {_extension, language} -> language end)
+
+    if length(potentials) > 0 do
+      hd(potentials)
+    else
+      nil
+    end
   end
 end
