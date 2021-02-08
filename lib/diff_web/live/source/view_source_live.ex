@@ -3,17 +3,6 @@ defmodule DiffWeb.ViewSourceLive do
   # alias Diff.Packages.{Package, Version}
   alias Diff.{Source, Storage}
 
-  @file_extensions %{
-    ".js" => "javascript",
-    ".md" => "markdown",
-    ".css" => "css",
-    ".sh" => "bash",
-    ".ts" => "typescript",
-    ".yaml" => "yaml",
-    ".yml" => "yaml",
-    ".scss" => "scss"
-  }
-
   @impl true
   def mount(%{"package" => package, "version" => version}, _session, socket) do
     registry = "npm"
@@ -31,7 +20,7 @@ defmodule DiffWeb.ViewSourceLive do
        files: %{},
        files_list: [],
        current_file: nil,
-       content: nil,
+       lines: nil,
        file_type: nil
      )}
   end
@@ -41,11 +30,11 @@ defmodule DiffWeb.ViewSourceLive do
     content =
       files
       |> Map.get(filename)
-      |> Storage.get()
+      |> maybe_get_file_content()
 
-    file_type = get_file_type(filename)
+    file_type = get_file_extension(filename)
 
-    {:noreply, assign(socket, content: content, current_file: filename, file_type: file_type)}
+    {:noreply, assign(socket, lines: content, current_file: filename, file_type: file_type)}
   end
 
   @impl true
@@ -71,33 +60,33 @@ defmodule DiffWeb.ViewSourceLive do
     content =
       files
       |> Map.get(hd(files_list))
-      |> Storage.get()
+      |> maybe_get_file_content()
 
-    file_type = get_file_type(hd(files_list))
+    file_type = get_file_extension(hd(files_list))
 
     {:noreply,
      assign(socket,
        files: files,
        files_list: files_list,
        current_file: hd(files_list),
-       content: content,
+       lines: content,
        file_type: file_type,
        loading: false
      )}
   end
 
-  defp get_file_type(filename) do
-    potentials =
-      @file_extensions
-      |> Enum.filter(fn {extension, language} ->
-        String.ends_with?(filename, extension)
-      end)
-      |> Enum.map(fn {_extension, language} -> language end)
+  defp get_file_extension(filename) do
+    String.split(filename, ".")
+    |> List.last()
+  end
 
-    if length(potentials) > 0 do
-      hd(potentials)
+  defp maybe_get_file_content(key) do
+    content = Storage.get(key)
+
+    if String.valid?(content) do
+      String.split(content, "\n")
     else
-      nil
+      "Cannot display binary file"
     end
   end
 end

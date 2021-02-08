@@ -3,7 +3,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 @import "../node_modules/nprogress/nprogress.css";
-@import "../node_modules/highlight.js/styles/obsidian.css";
+@import "./prism-atom-dark.css";
 
 .link-button {
   @apply text-gray-800 p-2 bg-gray-50 shadow-sm hover:bg-gray-200 hover:shadow rounded-lg ml-2;
@@ -22,7 +22,7 @@
 }
 
 .code {
-  @apply p-6 overflow-x-auto text-sm;
+  @apply pt-6 pr-6 pb-6 pl-0 overflow-x-auto text-sm;
   width: 70rem;
   max-width: 100%;
 }
@@ -112,4 +112,35 @@
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
+}
+
+/* Add line numbers to code blocks */
+pre[class*="language-"].line-numbers {
+  counter-reset: linenumber;
+  counter-reset: linenumber var(--counter-start, 0);
+  padding-left: 0;
+}
+
+pre[class*="language-"].line-numbers div.prism-line {
+  text-indent: 0.5rem;
+}
+
+pre[class*="language-"].line-numbers div.prism-line > a::before {
+  @apply pr-10 mr-4 cursor-pointer;
+  pointer-events: auto;
+  content: counter(linenumber);
+  counter-increment: linenumber;
+  color: #999;
+  text-indent: 0;
+  text-align: right;
+  box-sizing: border-box;
+  left: -3.8em; /* make it -4.6em if your box-sizing is content-box */
+  display: inline-block;
+  width: 2em;
+  height: 100%;
+  border-right: 2px solid #999;
+}
+
+#code-pre *:target {
+  @apply bg-gray-400;
 }

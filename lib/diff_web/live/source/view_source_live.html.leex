@@ -25,13 +25,10 @@
 
     <pre
       id="code-preview"
-      class="code"
+      class="code line-numbers"
       phx-hook="codeUpdated"
-      data-src="<%= @current_file %>"
-    >
-      <code class="language-<%= @file_type %>">
-        <%= @content %>
-      </code>
-    </pre>
+    ><code class="block language-<%= @file_type %>">
+        <%= @lines |> Enum.join("\n") %>
+      </code></pre>
   <% end %>
 </section>

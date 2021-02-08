@@ -17,15 +17,24 @@ import { Socket } from "phoenix"
 import NProgress from "nprogress"
 import { LiveSocket } from "phoenix_live_view"
 
-import { highlightBlock } from "highlight.js"
+import Prism from "prismjs"
+import "./prism-lines"
+Prism.hooks.add("lines-register", ({ listeners }) => {
+  let counter = 1;
+  listeners.push({
+    onNewLine({ line }) {
+      counter++
+    }
+  })
+})
 
 const hooks = {
   codeUpdated: {
     mounted() {
-      highlightBlock(this.el)
+      Prism.highlightAllUnder(this.el)
     },
     updated() {
-      highlightBlock(this.el)
+      Prism.highlightAllUnder(this.el)
     },
   }
 }
