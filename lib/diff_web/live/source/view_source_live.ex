@@ -4,10 +4,17 @@ defmodule DiffWeb.ViewSourceLive do
   alias Diff.{Source, Storage}
 
   @impl true
-  def mount(%{"package" => package, "version" => version}, _session, socket) do
+  def mount(%{"package" => package, "version" => version} = params, _session, socket) do
     registry = "npm"
     Source.subscribe(registry, package, version)
     Source.get_source(registry, package, version)
+
+    filename =
+      if params["filename"] do
+        URI.decode(params["filename"])
+      else
+        nil
+      end
 
     {:ok,
      assign(
@@ -19,22 +26,41 @@ defmodule DiffWeb.ViewSourceLive do
        nonexistent: false,
        files: %{},
        files_list: [],
-       current_file: nil,
+       current_file: filename,
        lines: nil,
        file_type: nil
      )}
   end
 
   @impl true
-  def handle_event("select_file", %{"f" => filename}, %{assigns: %{files: files}} = socket) do
+  def handle_event(
+        "select_file",
+        %{"f" => filename},
+        %{assigns: %{package: package, version: version, files: files}} = socket
+      ) do
     content =
       files
       |> Map.get(filename)
       |> maybe_get_file_content()
 
-    file_type = get_file_extension(filename)
+    socket =
+      assign(
+        socket,
+        lines: content,
+        current_file: filename,
+        file_type: get_file_extension(filename)
+      )
 
-    {:noreply, assign(socket, lines: content, current_file: filename, file_type: file_type)}
+    {:noreply,
+     push_patch(socket,
+       to: Routes.view_source_path(socket, :index, package, version, filename),
+       replace: true
+     )}
+  end
+
+  @impl true
+  def handle_params(_params, _uri, socket) do
+    {:noreply, socket}
   end
 
   @impl true
@@ -47,7 +73,10 @@ defmodule DiffWeb.ViewSourceLive do
   end
 
   @impl true
-  def handle_info({Source, :found_source, files_list_key}, socket) do
+  def handle_info(
+        {Source, :found_source, files_list_key},
+        %{assigns: %{current_file: filename}} = socket
+      ) do
     files =
       Storage.get(files_list_key)
       |> Jason.decode!()
@@ -57,18 +86,25 @@ defmodule DiffWeb.ViewSourceLive do
       |> Enum.map(fn {filename, _key} -> filename end)
       |> Enum.sort()
 
+    filename =
+      if filename do
+        filename
+      else
+        hd(files_list)
+      end
+
     content =
       files
-      |> Map.get(hd(files_list))
+      |> Map.get(filename)
       |> maybe_get_file_content()
 
-    file_type = get_file_extension(hd(files_list))
+    file_type = get_file_extension(filename)
 
     {:noreply,
      assign(socket,
        files: files,
        files_list: files_list,
-       current_file: hd(files_list),
+       current_file: filename,
        lines: content,
        file_type: file_type,
        loading: false

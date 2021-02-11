@@ -17,7 +17,7 @@ module.exports = (env, options) => {
       ]
     },
     entry: {
-      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
+      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.ts'])
     },
     output: {
       filename: '[name].js',
@@ -35,6 +35,13 @@ module.exports = (env, options) => {
           }
         },
         {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'ts-loader'
+          }
+        },
+        {
           test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
@@ -43,6 +50,9 @@ module.exports = (env, options) => {
           ],
         }
       ]
+    },
+    resolve: {
+      extensions: [".ts", ".js"]
     },
     plugins: [
       new MiniCssExtractPlugin({ filename: '../css/app.css' }),

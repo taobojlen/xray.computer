@@ -17,18 +17,31 @@
         class="select mb-10"
       >
         <%= for filename <- @files_list do %>
-          <option value="<%= filename %>"><%= filename %></option>
+          <option
+            value="<%= filename %>"
+            <%= if @current_file == filename, do: "selected" %>
+          >
+            <%= filename %>
+          </option>
         <% end %>
         <i class="fas fa-circle" />
       </select>
     </form>
 
-    <pre
+    <code
       id="code-preview"
-      class="code line-numbers"
+      class="code"
+      data-extension="<%= @file_type %>"
       phx-hook="codeUpdated"
-    ><code class="block language-<%= @file_type %>">
-        <%= @lines |> Enum.join("\n") %>
-      </code></pre>
+    ><table>
+        <tbody>
+          <%= for {line, index} <- Enum.with_index(@lines) |> Enum.slice(0, 34) do %>
+            <tr>
+              <td class="pl-6 select-none"><%= index %></td>
+              <td id="line-<%= index %>" class="line-content pl-6"><%= line %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table></code>
   <% end %>
 </section>

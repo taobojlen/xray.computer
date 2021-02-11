@@ -16,10 +16,8 @@ defmodule DiffWeb.Router do
     get "/", BaseController, :show
     live "/diff", DiffLive, :index
     live "/source", SelectSourceLive, :index
-    live "/source/:package/:version", ViewSourceLive
-
-    resources "/packages", PackageController
-    resources "/versions", VersionController
+    live "/source/:package/:version", ViewSourceLive, :index
+    live "/source/:package/:version/:filename", ViewSourceLive, :index
   end
 
   # Enables LiveDashboard only for development

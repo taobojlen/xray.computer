@@ -22,9 +22,8 @@
 }
 
 .code {
-  @apply pt-6 pr-6 pb-6 pl-0 overflow-x-auto text-sm;
+  @apply bg-white rounded p-6 pl-0 overflow-x-auto text-sm font-mono max-w-full;
   width: 70rem;
-  max-width: 100%;
 }
 
 /* LiveView specific classes for your customizations */

@@ -5,9 +5,9 @@
  * from https://github.com/PrismJS/prism-themes
  */
 
-code[class*="language-"],
-pre[class*="language-"] {
+code.code {
   color: #c5c8c6;
+  background: #1d1f21;
   text-shadow: 0 1px rgba(0, 0, 0, 0.3);
   font-family: Inconsolata, Monaco, Consolas, "Courier New", Courier, monospace;
   direction: ltr;
@@ -25,25 +25,6 @@ pre[class*="language-"] {
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
-}
-
-/* Code blocks */
-pre[class*="language-"] {
-  padding: 1em;
-  margin: 0.5em 0;
-  overflow: auto;
-  border-radius: 0.3em;
-}
-
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-  background: #1d1f21;
-}
-
-/* Inline code */
-:not(pre) > code[class*="language-"] {
-  padding: 0.1em;
-  border-radius: 0.3em;
 }
 
 .token.comment,
