@@ -2,15 +2,17 @@ stages:
   - build
   - test
 
-compile:
-  stage: build
-  image: elixir:1.9.4
-  # use cache to speed up subsequent builds
+.elixir:
+  image: elixir:1.11.3
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - _build
       - deps
+
+compile:
+  stage: build
+  extends: ".elixir"
   script:
     - mix local.hex --force
     - mix local.rebar --force
@@ -19,7 +21,7 @@ compile:
 
 test:
   stage: test
-  image: elixir:1.9.4-slim
+  extends: ".elixir"
   services:
     - postgres:13.2-alpine
   variables:
@@ -28,12 +30,6 @@ test:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: "postgres"
     MIX_ENV: "test"
-  # use cache
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - _build
-      - deps
   script:
     - mix local.hex --force
     - mix local.rebar --force
@@ -43,12 +39,7 @@ test:
 
 lint:
   stage: test
-  image: elixir:1.9.1-alpine
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - _build
-      - deps
+  extends: ".elixir"
   script:
     - mix local.hex --force
     - mix local.rebar --force
