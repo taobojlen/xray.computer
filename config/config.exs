@@ -10,7 +10,8 @@ use Mix.Config
 config :xray,
   ecto_repos: [Xray.Repo],
   tmp_dir: "/tmp/xray",
-  registry: Xray.Registry
+  registry: Xray.Registry,
+  npm_api: Xray.Api.Npm
 
 config :xray, :bucket,
   implementation: Xray.Storage.Local,

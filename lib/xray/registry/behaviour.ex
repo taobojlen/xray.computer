@@ -13,7 +13,7 @@ defmodule Xray.Registry.Behaviour do
   @callback get_registries() :: [registry]
   @callback is_registry(String.t()) :: boolean()
   @callback search(registry, String.t()) :: {:ok, [package]} | {:error, String.t()}
-  @callback get_packages(registry) :: {:ok, [package]} | {:error, String.t()}
+  @callback get_packages!(registry) :: [package]
   @callback get_package(registry, package) :: {:ok, Package.t()} | {:error, String.t()}
   @callback get_versions(registry, package) :: {:ok, [Version.t()]} | {:error, String.t()}
   @callback get_source(registry, package, version) :: {:ok, String.t()} | {:error, String.t()}

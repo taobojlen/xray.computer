@@ -26,7 +26,7 @@ defmodule Xray.Registry do
     @doc """
     Fetch a list of all packages in the registry.
     """
-    @callback get_packages() :: {:ok, [package]} | {:error, String.t()}
+    @callback get_packages!() :: [package]
 
     @doc """
     Fetch details about the package and return a changeset ready to store in the database.
@@ -64,9 +64,9 @@ defmodule Xray.Registry do
   end
 
   @impl true
-  def get_packages(registry) do
+  def get_packages!(registry) do
     impl = get_registry(registry)
-    impl.get_packages()
+    impl.get_packages!()
   end
 
   @impl true

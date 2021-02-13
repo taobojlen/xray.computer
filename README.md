@@ -6,7 +6,10 @@
 - [ ] Cache responses from registry
 - [ ] Write more tests
 - [ ] Implement diff
+- [ ] Add cronjob to clear tmp regularly
 - [ ] Add S3 storage
+- [ ] Put cursor in search field immediately when viewing page
+- [ ] Maybe: support from doing directly to diff from lockfile diff
 
 To start your Phoenix server:xray
 

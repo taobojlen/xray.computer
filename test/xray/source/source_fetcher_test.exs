@@ -3,7 +3,7 @@ defmodule Xray.Source.SourceFetcherTest do
   use Oban.Testing, repo: Xray.Repo
   import Xray.Factory
   import Mox
-  alias Xray.{Packages, Repo, Source, Storage}
+  alias Xray.Source
 
   describe "perform" do
     test "fetches source code" do

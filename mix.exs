@@ -57,10 +57,9 @@ defmodule Xray.MixProject do
       {:httpoison, "~> 1.8"},
       {:oban, "~> 2.4"},
       {:credo, "~> 1.5", only: :dev},
-      {:exvcr, "~> 0.12.2", only: :test},
       {:mox, "~> 1.0", only: :test},
       {:quantum, "~> 3.3"},
-      {:jsx, "~> 2.8"}
+      {:jaxon, "~> 2.0"}
     ]
   end
 

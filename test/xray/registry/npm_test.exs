@@ -1,51 +1,62 @@
 defmodule Xray.Registry.NpmTest do
   use ExUnit.Case, async: true
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
+
+  alias Xray.Api
   alias Xray.Packages.Version
   alias Xray.Registry.Npm
 
-  setup_all do
-    HTTPoison.start()
-  end
+  import Mox
+
+  setup :verify_on_exit!
 
   describe "get_packages" do
     test "it gets the full list of packages" do
-      use_cassette "npm" do
-        with {:ok, packages} <- Npm.get_packages() do
-          package_set = MapSet.new(packages)
+      Api.MockNpm
+      |> expect(:get_stream!, fn _ -> File.stream!("test/data/npm/all_docs.json") end)
 
-          assert length(packages) == 1
-          assert MapSet.size(package_set) == 1
-        end
+      with packages <- Npm.get_packages!() do
+        package_set = MapSet.new(packages)
+
+        # Assert that packages were read correctly, and that
+        # there are no duplicates
+        assert length(packages) == 99
+        assert MapSet.size(package_set) == 99
       end
     end
   end
 
   describe "get_versions" do
     test "it handles existing versions" do
-      use_cassette "npm" do
-        with {:ok, versions} <- Npm.get_versions("lodash") do
-          latest = hd(versions)
+      Api.MockNpm
+      |> expect(:get, fn _ ->
+        {:ok, %{body: File.read!("test/data/npm/lodash.json") |> Jason.decode!()}}
+      end)
 
-          assert latest.version == "4.17.20"
-          assert length(versions) == 113
+      with {:ok, versions} <- Npm.get_versions("lodash") do
+        latest = hd(versions)
 
-          versions
-          |> Enum.each(fn version ->
-            changeset = Version.changeset(version, %{})
-            assert changeset.valid?
-          end)
-        end
+        assert latest.version == "4.17.20"
+        assert length(versions) == 113
+
+        versions
+        |> Enum.each(fn version ->
+          changeset = Version.changeset(version, %{})
+          assert changeset.valid?
+        end)
       end
     end
   end
 
   describe "get_package" do
     test "it handles existing packages" do
-      use_cassette "npm" do
-        with {:ok, changeset} <- Npm.get_package("lodash") do
-          assert changeset.valid?
-        end
+      Api.MockNpm
+      # called once to get metadata, once to get versions
+      |> expect(:get, 2, fn _ ->
+        {:ok, %{body: File.read!("test/data/npm/lodash.json") |> Jason.decode!()}}
+      end)
+
+      with {:ok, changeset} <- Npm.get_package("lodash") do
+        assert changeset.valid?
       end
     end
   end

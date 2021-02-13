@@ -1,7 +1,8 @@
 use Mix.Config
 
 config :xray,
-  registry: Xray.MockRegistry
+  registry: Xray.MockRegistry,
+  npm_api: Xray.Api.MockNpm
 
 # Configure your database
 #

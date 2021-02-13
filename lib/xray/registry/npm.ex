@@ -2,29 +2,19 @@ defmodule Xray.Registry.Npm do
   @moduledoc """
   A Registry module to interface with npm.
   """
+  alias Ecto.Changeset
   alias Xray.{Registry, Util}
   alias Xray.Packages.{Package, Version}
-  alias Ecto.Changeset
-  use HTTPoison.Base
 
   # TODO: cache responses from npm
 
   @behaviour Registry.API
 
-  @impl HTTPoison.Base
-  def process_request_url(url) do
-    "https://registry.npmjs.com" <> url
-  end
-
-  @impl HTTPoison.Base
-  def process_response_body(body) do
-    body
-    |> Jason.decode!()
-  end
+  @api Application.compile_env!(:xray, :npm_api)
 
   @impl true
   def search(query) do
-    case get("/-/v1/search?size=10&text=" <> query) do
+    case @api.get("/-/v1/search?size=10&text=" <> query) do
       {:ok, response} ->
         {:ok,
          response.body["objects"] |> Enum.map(fn obj -> get_in(obj, ["package", "name"]) end)}
@@ -35,16 +25,18 @@ defmodule Xray.Registry.Npm do
   end
 
   @impl true
-  def get_packages() do
-    case HTTPoison.get("https://replicate.npmjs.com/_all_docs") do
-      {:ok, response} ->
-        {:ok, response.body}
-    end
+  def get_packages!() do
+    path = Jaxon.Path.parse!("$.rows[*].key")
+
+    @api.get_stream!("https://replicate.npmjs.com/_all_docs")
+    |> Jaxon.Stream.from_enumerable()
+    |> Jaxon.Stream.query(path)
+    |> Enum.to_list()
   end
 
   @impl true
   def get_package(name) do
-    case get("/" <> name) do
+    case @api.get("/" <> name) do
       {:ok, %{body: %{"name" => returned_name}}} ->
         if returned_name == name do
           with {:ok, versions} <- get_versions(name) do
@@ -70,7 +62,7 @@ defmodule Xray.Registry.Npm do
 
   @impl true
   def get_versions(package) do
-    case get("/" <> package) do
+    case @api.get("/" <> package) do
       {:ok, response} ->
         {:ok, maybe_get_versions(response.body)}
 
@@ -86,7 +78,7 @@ defmodule Xray.Registry.Npm do
     with {:ok, url} <- get_tarball_url(package, version) do
       File.touch!(tarball_path)
 
-      Util.get_stream!(url)
+      @api.get_stream!(url)
       |> Stream.into(File.stream!(tarball_path))
       |> Stream.run()
 
@@ -113,7 +105,7 @@ defmodule Xray.Registry.Npm do
   end
 
   defp get_tarball_url(package, version) do
-    case get("/" <> package) do
+    case @api.get("/" <> package) do
       {:ok, response} ->
         case get_in(response.body, ["versions", version, "dist", "tarball"]) do
           nil -> {:error, "Couldn't find tarball URL"}
