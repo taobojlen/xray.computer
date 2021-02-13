@@ -35,6 +35,14 @@ defmodule Diff.Registry.Npm do
   end
 
   @impl true
+  def get_packages() do
+    case HTTPoison.get("https://replicate.npmjs.com/_all_docs") do
+      {:ok, response} ->
+        {:ok, response.body}
+    end
+  end
+
+  @impl true
   def get_package(name) do
     case get("/" <> name) do
       {:ok, %{body: %{"name" => returned_name}}} ->

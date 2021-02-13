@@ -1,7 +1,13 @@
 # Diff
 
 ## To do
+- [ ] Download full list of packages daily & use that for search
+  - Stream download from npm since it's a large JSON file
 - [ ] Cache responses from registry
+- [ ] Write more tests
+- [ ] Implement diff
+- [ ] Add S3 storage
+- [ ] Rename to xray
 
 To start your Phoenix server:
 

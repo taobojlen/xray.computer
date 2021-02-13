@@ -19,7 +19,7 @@ config :diff, :bucket,
 config :diff, Oban,
   repo: Diff.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [source_fetcher: 5]
+  queues: [source_fetcher: 5, package_list_fetcher: 1]
 
 # Configures the endpoint
 config :diff, DiffWeb.Endpoint,
@@ -36,6 +36,11 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :diff, Diff.Scheduler,
+  jobs: [
+    {"@daily", {Diff.Scheduler, :update_package_lists, []}}
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

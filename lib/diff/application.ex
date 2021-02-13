@@ -18,7 +18,9 @@ defmodule Diff.Application do
       # Start the Endpoint (http/https)
       DiffWeb.Endpoint,
       # Start queuing system
-      {Oban, oban_config()}
+      {Oban, oban_config()},
+      # Start scheduler
+      Diff.Scheduler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

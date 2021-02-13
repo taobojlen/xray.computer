@@ -8,6 +8,19 @@ defmodule Diff.Registry.NpmTest do
     HTTPoison.start()
   end
 
+  describe "get_packages" do
+    test "it gets the full list of packages" do
+      use_cassette "npm" do
+        with {:ok, packages} <- Npm.get_packages() do
+          package_set = MapSet.new(packages)
+
+          assert length(packages) == 1
+          assert MapSet.size(package_set) == 1
+        end
+      end
+    end
+  end
+
   describe "get_versions" do
     test "it handles existing versions" do
       use_cassette "npm" do

@@ -1,4 +1,5 @@
 defmodule Diff.Registry do
+  alias Diff.Repo
   alias Diff.Packages.{Package, Version}
   alias Diff.Registry.Npm
 
@@ -23,6 +24,11 @@ defmodule Diff.Registry do
     @callback search(String.t()) :: {:ok, [package]} | {:error, String.t()}
 
     @doc """
+    Fetch a list of all packages in the registry.
+    """
+    @callback get_packages() :: {:ok, [package]} | {:error, String.t()}
+
+    @doc """
     Fetch details about the package and return a changeset ready to store in the database.
     Note: the changeset should include associated versions!
     """
@@ -42,6 +48,11 @@ defmodule Diff.Registry do
   end
 
   @impl true
+  def get_registries do
+    Map.keys(@registries)
+  end
+
+  @impl true
   def is_registry("npm"), do: true
   @impl true
   def is_registry(_other), do: false
@@ -50,6 +61,12 @@ defmodule Diff.Registry do
   def search(registry, query) do
     impl = get_registry(registry)
     impl.search(query)
+  end
+
+  @impl true
+  def get_packages(registry) do
+    impl = get_registry(registry)
+    impl.get_packages()
   end
 
   @impl true
