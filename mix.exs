@@ -11,11 +11,10 @@ defmodule Xray.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
-        vcr: :test,
-        "vcr.delete": :test,
-        "vcr.check": :test,
-        "vcr.show": :test
+        coveralls: :test,
+        "coveralls.json": :test
       ]
     ]
   end
@@ -58,6 +57,7 @@ defmodule Xray.MixProject do
       {:oban, "~> 2.4"},
       {:credo, "~> 1.5", only: :dev},
       {:mox, "~> 1.0", only: :test},
+      {:excoveralls, "~> 0.13.4", only: :test},
       {:quantum, "~> 3.3"},
       {:jaxon, "~> 2.0"}
     ]
