@@ -1,4 +1,4 @@
-defmodule DiffWeb.ConnCase do
+defmodule XrayWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule DiffWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use DiffWeb.ConnCase, async: true`, although
+  by setting `use XrayWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -23,20 +23,20 @@ defmodule DiffWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import DiffWeb.ConnCase
+      import XrayWeb.ConnCase
 
-      alias DiffWeb.Router.Helpers, as: Routes
+      alias XrayWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint DiffWeb.Endpoint
+      @endpoint XrayWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Sandbox.checkout(Diff.Repo)
+    :ok = Sandbox.checkout(Xray.Repo)
 
     unless tags[:async] do
-      Sandbox.mode(Diff.Repo, {:shared, self()})
+      Sandbox.mode(Xray.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= csrf_meta_tag() %>
+    <%= live_title_tag assigns[:page_title] || "Home", suffix: " | Xray" %>
+    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script src="https://kit.fontawesome.com/5b070aaaeb.js" crossorigin="anonymous" integrity="sha384-id0jiems3o9ouGyeifwMRH3YqquhZQo6a3yZ7XuKK1sNO1X2or5zX2oe+7gT6+IB"></script>
+  </head>
+  <body class="bg-gray-100">
+    <header>
+      <nav role="navigation" class="flex w-full justify-center my-6">
+        <%= live_patch "Diff",
+          to: Routes.diff_path(@conn, :index),
+          class: active_class(@conn, Routes.diff_path(@conn, :index))
+        %>
+        <%= live_patch "Source",
+          to: "/source",
+          class: active_class(@conn, "/source")
+        %>
+      </nav>
+    </header>
+    <%= @inner_content %>
+  </body>
+</html>

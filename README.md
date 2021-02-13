@@ -1,4 +1,4 @@
-# Diff
+# X-Ray
 
 ## To do
 - [ ] Download full list of packages daily & use that for search
@@ -7,9 +7,8 @@
 - [ ] Write more tests
 - [ ] Implement diff
 - [ ] Add S3 storage
-- [ ] Rename to xray
 
-To start your Phoenix server:
+To start your Phoenix server:xray
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`

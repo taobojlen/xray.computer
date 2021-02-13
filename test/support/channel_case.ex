@@ -1,4 +1,4 @@
-defmodule DiffWeb.ChannelCase do
+defmodule XrayWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -11,7 +11,7 @@ defmodule DiffWeb.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use DiffWeb.ChannelCase, async: true`, although
+  by setting `use XrayWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,18 +22,18 @@ defmodule DiffWeb.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import DiffWeb.ChannelCase
+      import XrayWeb.ChannelCase
 
       # The default endpoint for testing
-      @endpoint DiffWeb.Endpoint
+      @endpoint XrayWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Sandbox.checkout(Diff.Repo)
+    :ok = Sandbox.checkout(Xray.Repo)
 
     unless tags[:async] do
-      Sandbox.mode(Diff.Repo, {:shared, self()})
+      Sandbox.mode(Xray.Repo, {:shared, self()})
     end
 
     :ok

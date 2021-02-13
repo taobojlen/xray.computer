@@ -1,4 +1,4 @@
-defmodule Diff.Repo.Migrations.CreatePackages do
+defmodule Xray.Repo.Migrations.CreatePackages do
   use Ecto.Migration
 
   def change do

@@ -1,5 +1,5 @@
-defmodule Diff.Factory do
-  alias Diff.{Packages, Repo}
+defmodule Xray.Factory do
+  alias Xray.{Packages, Repo}
 
   # Factories
 

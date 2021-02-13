@@ -1,9 +1,9 @@
-defmodule Diff.MixProject do
+defmodule Xray.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :diff,
+      app: :xray,
       version: "0.1.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -25,7 +25,7 @@ defmodule Diff.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Diff.Application, []},
+      mod: {Xray.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -60,7 +60,7 @@ defmodule Diff.MixProject do
       {:exvcr, "~> 0.12.2", only: :test},
       {:mox, "~> 1.0", only: :test},
       {:quantum, "~> 3.3"},
-      {:jsx, "~> 3.0"}
+      {:jsx, "~> 2.8"}
     ]
   end
 

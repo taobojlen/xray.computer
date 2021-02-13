@@ -1,10 +1,10 @@
 module.exports = {
   purge: [
-    "../lib/diff_web/live/**/*.ex",
-    "../lib/diff_web/live/**/*.leex",
-    "../lib/diff_web/templates/**/*.eex",
-    "../lib/diff_web/templates/**/*.leex",
-    "../lib/diff_web/views/**/*.ex",
+    "../lib/xray_web/live/**/*.ex",
+    "../lib/xray_web/live/**/*.leex",
+    "../lib/xray_web/templates/**/*.eex",
+    "../lib/xray_web/templates/**/*.leex",
+    "../lib/xray_web/views/**/*.ex",
     "./js/**/*.js",
   ],
   darkMode: false, // or 'media' or 'class'

@@ -1,3 +1,3 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(Diff.Repo, :manual)
-Mox.defmock(Diff.MockRegistry, for: Diff.Registry.Behaviour)
+Ecto.Adapters.SQL.Sandbox.mode(Xray.Repo, :manual)
+Mox.defmock(Xray.MockRegistry, for: Xray.Registry.Behaviour)

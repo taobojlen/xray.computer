@@ -1,4 +1,4 @@
-defmodule Diff.DataCase do
+defmodule Xray.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Diff.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Diff.DataCase, async: true`, although
+  by setting `use Xray.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -19,20 +19,20 @@ defmodule Diff.DataCase do
 
   using do
     quote do
-      alias Diff.Repo
+      alias Xray.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Diff.DataCase
+      import Xray.DataCase
     end
   end
 
   setup tags do
-    :ok = Sandbox.checkout(Diff.Repo)
+    :ok = Sandbox.checkout(Xray.Repo)
 
     unless tags[:async] do
-      Sandbox.mode(Diff.Repo, {:shared, self()})
+      Sandbox.mode(Xray.Repo, {:shared, self()})
     end
 
     :ok

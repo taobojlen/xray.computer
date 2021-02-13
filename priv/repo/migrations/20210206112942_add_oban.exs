@@ -1,4 +1,4 @@
-defmodule Diff.Repo.Migrations.AddOban do
+defmodule Xray.Repo.Migrations.AddOban do
   use Ecto.Migration
 
   def up, do: Oban.Migrations.up()

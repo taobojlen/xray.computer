@@ -7,26 +7,26 @@
 # General application configuration
 use Mix.Config
 
-config :diff,
-  ecto_repos: [Diff.Repo],
-  tmp_dir: "/tmp/diff",
-  registry: Diff.Registry
+config :xray,
+  ecto_repos: [Xray.Repo],
+  tmp_dir: "/tmp/xray",
+  registry: Xray.Registry
 
-config :diff, :bucket,
-  implementation: Diff.Storage.Local,
-  name: "diff"
+config :xray, :bucket,
+  implementation: Xray.Storage.Local,
+  name: "xray"
 
-config :diff, Oban,
-  repo: Diff.Repo,
+config :xray, Oban,
+  repo: Xray.Repo,
   plugins: [Oban.Plugins.Pruner],
   queues: [source_fetcher: 5, package_list_fetcher: 1]
 
 # Configures the endpoint
-config :diff, DiffWeb.Endpoint,
+config :xray, XrayWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "YVExBComiY3FGntGjpp8rSY9vAjqtg889rM0rwW98lHiKl2eii7BnwinPRimv/uv",
-  render_errors: [view: DiffWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Diff.PubSub,
+  render_errors: [view: XrayWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Xray.PubSub,
   live_view: [signing_salt: "xCOKwsLb"]
 
 # Configures Elixir's Logger
@@ -37,9 +37,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :diff, Diff.Scheduler,
+config :xray, Xray.Scheduler,
   jobs: [
-    {"@daily", {Diff.Scheduler, :update_package_lists, []}}
+    {"@daily", {Xray.Scheduler, :update_package_lists, []}}
   ]
 
 # Import environment specific config. This must remain at the bottom

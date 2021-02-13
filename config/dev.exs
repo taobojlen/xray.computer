@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :diff, Diff.Repo,
+config :xray, Xray.Repo,
   username: "postgres",
   password: "postgres",
-  database: "diff_dev",
+  database: "xray_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :diff, Diff.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :diff, DiffWeb.Endpoint,
+config :xray, XrayWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -52,16 +52,16 @@ config :diff, DiffWeb.Endpoint,
 #
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on
-# different ports.
+# xrayerent ports.
 
 # Watch static and templates for browser reloading.
-config :diff, DiffWeb.Endpoint,
+config :xray, XrayWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/diff_web/(live|views)/.*(ex)$",
-      ~r"lib/diff_web/templates/.*(eex)$"
+      ~r"lib/xray_web/(live|views)/.*(ex)$",
+      ~r"lib/xray_web/templates/.*(eex)$"
     ]
   ]
 
