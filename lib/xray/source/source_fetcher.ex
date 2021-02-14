@@ -12,6 +12,7 @@ defmodule Xray.Source.SourceFetcher do
     :ok
   end
 
+  # sobelow_skip ["Traversal"]
   defp store_files(package, version) do
     registry = get_registry()
 

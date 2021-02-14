@@ -40,6 +40,7 @@ defmodule Xray.Application do
     Application.get_env(:xray, Oban)
   end
 
+  # sobelow_skip ["Traversal"]
   defp setup_tmp_dir do
     if dir = Application.get_env(:xray, :tmp_dir) do
       File.mkdir_p!(dir)

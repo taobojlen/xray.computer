@@ -70,6 +70,7 @@ defmodule Xray.Registry.Npm do
   end
 
   @impl true
+  # sobelow_skip ["Traversal"]
   def get_source(package, version) do
     tarball_path = Util.tmp_path("tarball")
 

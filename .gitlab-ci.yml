@@ -45,3 +45,4 @@ lint:
     - mix local.rebar --force
     - mix format --check-formatted
     - mix credo --strict
+    - mix sobelow --config --private

@@ -2,6 +2,7 @@ defmodule Xray.Storage.Local do
   @behaviour Xray.Storage.Repo
 
   @impl true
+  # sobelow_skip ["Traversal"]
   def get(key) do
     case(File.read(path(key))) do
       {:ok, content} -> content
@@ -18,6 +19,7 @@ defmodule Xray.Storage.Local do
   end
 
   @impl true
+  # sobelow_skip ["Traversal"]
   def put(key, content) do
     path = path(key)
     File.mkdir_p!(Path.dirname(path))
@@ -26,6 +28,10 @@ defmodule Xray.Storage.Local do
 
   @spec path(String.t()) :: binary()
   defp path(key) do
+    if String.contains?(key, "../") do
+      raise "Invalid storage key: '#{key}'"
+    end
+
     Path.join(root(), key)
   end
 

@@ -1,4 +1,5 @@
 defmodule Xray.Util do
+  # sobelow_skip ["Traversal"]
   def tmp_path(prefix \\ "") do
     tmp_folder = Path.join([System.tmp_dir!(), "xray"])
 
