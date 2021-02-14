@@ -11,9 +11,8 @@ defmodule XrayWeb.DiffLive do
 
   @impl true
   def handle_event("suggest", %{"q" => query}, socket) do
-    with {:ok, packages} <- Registry.Npm.search(query) do
-      {:noreply, assign(socket, results: packages, query: query)}
-    end
+    packages = Registry.search("npm", query)
+    {:noreply, assign(socket, results: packages, query: query)}
   end
 
   @impl true
