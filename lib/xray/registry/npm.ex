@@ -11,18 +11,6 @@ defmodule Xray.Registry.Npm do
   @api Application.compile_env!(:xray, :npm_api)
 
   @impl true
-  def search(query) do
-    case @api.get("/-/v1/search?size=10&text=" <> query) do
-      {:ok, response} ->
-        {:ok,
-         response.body["objects"] |> Enum.map(fn obj -> get_in(obj, ["package", "name"]) end)}
-
-      other ->
-        other
-    end
-  end
-
-  @impl true
   def get_packages! do
     path = Jaxon.Path.parse!("$.rows[*].key")
 

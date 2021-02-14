@@ -37,19 +37,16 @@ defmodule XrayWeb.SelectSourceLive do
 
   @impl true
   def handle_event("select", _params, %{assigns: %{package: package, version: version}} = socket) do
+    # Scoped packages may contain slashes. To avoid breaking our routes, replace them with something
+    # else
+    package = package |> String.replace("/", " ") |> URI.encode()
+    version = URI.encode(version)
     {:noreply, push_redirect(socket, to: "/source/#{package}/#{version}")}
   end
 
   defp get_suggestions(query) do
-    with {:ok, packages} <- Registry.Npm.search(query) do
-      Enum.each(packages, fn package ->
-        Packages.create_package(%{name: package, registry: "npm"}, on_conflict: :nothing)
-      end)
-
-      packages
-      |> Enum.filter(fn package -> package != query end)
-      |> Enum.slice(0, 3)
-    end
+    Registry.search("npm", query)
+    |> Enum.slice(0, 3)
   end
 
   defp get_versions(package) do

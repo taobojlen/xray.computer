@@ -1,7 +1,7 @@
 # X-Ray
 
 ## To do
-- [ ] Download full list of packages daily & use that for search
+- [x] Download full list of packages daily & use that for search
   - Stream download from npm since it's a large JSON file
 - [ ] Cache responses from registry
 - [ ] Write more tests

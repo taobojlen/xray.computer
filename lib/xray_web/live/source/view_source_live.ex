@@ -6,6 +6,8 @@ defmodule XrayWeb.ViewSourceLive do
   @impl true
   def mount(%{"package" => package, "version" => version} = params, _session, socket) do
     registry = "npm"
+    package = URI.decode(package) |> String.replace(" ", "/")
+    version = URI.decode(version)
     Source.subscribe(registry, package, version)
     Source.get_source(registry, package, version)
 
@@ -75,7 +77,7 @@ defmodule XrayWeb.ViewSourceLive do
   @impl true
   def handle_info(
         {Source, :found_source, files_list_key},
-        %{assigns: %{current_file: filename}} = socket
+        %{assigns: %{current_file: filename, package: package, version: version}} = socket
       ) do
     files =
       Storage.get(files_list_key)
@@ -100,14 +102,20 @@ defmodule XrayWeb.ViewSourceLive do
 
     file_type = get_file_extension(filename)
 
+    socket =
+      assign(socket,
+        files: files,
+        files_list: files_list,
+        current_file: filename,
+        lines: content,
+        file_type: file_type,
+        loading: false
+      )
+
     {:noreply,
-     assign(socket,
-       files: files,
-       files_list: files_list,
-       current_file: filename,
-       lines: content,
-       file_type: file_type,
-       loading: false
+     push_patch(socket,
+       to: Routes.view_source_path(socket, :index, package, version, filename),
+       replace: true
      )}
   end
 

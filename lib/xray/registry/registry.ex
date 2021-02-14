@@ -1,6 +1,8 @@
 defmodule Xray.Registry do
+  alias Xray.Repo
   alias Xray.Packages.{Package, Version}
   alias Xray.Registry.Npm
+  import Ecto.Query
 
   @behaviour Xray.Registry.Behaviour
 
@@ -15,12 +17,6 @@ defmodule Xray.Registry do
     """
     @type package :: String.t()
     @type version :: String.t()
-    @doc """
-    Query the registry for the given search term. Returns a list of package names that match.
-
-    Implementations can return just the top *n* results and not worry about pagination.
-    """
-    @callback search(String.t()) :: {:ok, [package]} | {:error, String.t()}
 
     @doc """
     Fetch a list of all packages in the registry.
@@ -58,8 +54,13 @@ defmodule Xray.Registry do
 
   @impl true
   def search(registry, query) do
-    impl = get_registry(registry)
-    impl.search(query)
+    Repo.all(
+      from p in Package,
+        select: p.name,
+        where: ilike(p.name, ^"%#{query}%"),
+        where: p.registry == ^registry,
+        limit: 3
+    )
   end
 
   @impl true
