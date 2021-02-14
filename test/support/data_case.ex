@@ -24,6 +24,7 @@ defmodule Xray.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Xray.Factory
       import Xray.DataCase
     end
   end

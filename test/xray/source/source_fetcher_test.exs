@@ -19,8 +19,8 @@ defmodule Xray.Source.SourceFetcherTest do
         {:ok, destination}
       end)
 
-      package = insert!(:package)
-      version = insert!(:version, package_id: package.id)
+      package = insert(:package)
+      version = insert(:version, package: package)
 
       assert :ok = perform_job(Source.SourceFetcher, %{"id" => version.id})
     end

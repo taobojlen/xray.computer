@@ -1,44 +1,20 @@
 defmodule Xray.Factory do
-  alias Xray.{Packages, Repo}
+  use ExMachina.Ecto, repo: Xray.Repo
+  alias Xray.Packages.{Package, Version}
 
-  # Factories
-
-  def build(:package) do
-    %Packages.Package{
-      name: "package#{System.unique_integer([:positive])}",
-      registry: "npm"
+  def package_factory do
+    %Package{
+      name: sequence("package"),
+      registry: sequence(:registry, Package.get_registries())
     }
   end
 
-  def build(:version) do
-    %Packages.Version{
-      released_at: DateTime.utc_now() |> DateTime.truncate(:second),
-      version:
-        "#{System.unique_integer([:positive])}.#{System.unique_integer([:positive])}.#{
-          System.unique_integer([:positive])
-        }"
+  def version_factory do
+    version = Faker.App.semver(allow_pre: true, allow_build: true)
+
+    %Version{
+      version: version,
+      package: build(:package)
     }
-  end
-
-  def build(:package_with_versions) do
-    %Packages.Package{
-      name: "package#{System.unique_integer()}",
-      registry: "npm",
-      versions: [
-        build(:version),
-        build(:version),
-        build(:version)
-      ]
-    }
-  end
-
-  # Convenience API
-
-  def build(factory_name, attributes) do
-    factory_name |> build() |> struct!(attributes)
-  end
-
-  def insert!(factory_name, attributes \\ []) do
-    factory_name |> build(attributes) |> Repo.insert!()
   end
 end

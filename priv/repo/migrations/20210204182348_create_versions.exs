@@ -13,6 +13,5 @@ defmodule Xray.Repo.Migrations.CreateVersions do
     end
 
     create unique_index(:versions, [:package_id, :version])
-
   end
 end

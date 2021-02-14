@@ -58,6 +58,8 @@ defmodule Xray.MixProject do
       {:credo, "~> 1.5", only: :dev},
       {:mox, "~> 1.0", only: :test},
       {:excoveralls, "~> 0.13.4", only: :test},
+      {:ex_machina, "~> 2.6", only: :test},
+      {:faker, "~> 0.16.0", only: :test},
       {:quantum, "~> 3.3"},
       {:jaxon, "~> 2.0"}
     ]

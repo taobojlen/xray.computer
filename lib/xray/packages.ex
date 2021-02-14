@@ -132,24 +132,6 @@ defmodule Xray.Packages do
   def get_version!(id), do: Repo.get!(Version, id)
 
   @doc """
-  Creates a version.
-
-  ## Examples
-
-      iex> create_version(%{field: value})
-      {:ok, %Version{}}
-
-      iex> create_version(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_version(attrs \\ %{}) do
-    %Version{}
-    |> Version.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
   Updates a version.
 
   ## Examples

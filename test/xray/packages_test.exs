@@ -8,12 +8,12 @@ defmodule Xray.PackagesTest do
 
     @valid_attrs %{
       name: "some name",
-      registry: "some registry",
+      registry: "npm",
       versions_updated_at: "2010-04-17T14:00:00Z"
     }
     @update_attrs %{
       name: "some updated name",
-      registry: "some updated registry",
+      registry: "npm",
       versions_updated_at: "2011-05-18T15:01:01Z"
     }
     @invalid_attrs %{name: nil, registry: nil, versions_updated_at: nil}
@@ -28,19 +28,19 @@ defmodule Xray.PackagesTest do
     end
 
     test "list_packages/0 returns all packages" do
-      package = package_fixture()
+      package = insert(:package)
       assert Packages.list_packages() == [package]
     end
 
     test "get_package!/1 returns the package with given id" do
-      package = package_fixture()
+      package = insert(:package)
       assert Packages.get_package!(package.id) == package
     end
 
     test "create_package/1 with valid data creates a package" do
       assert {:ok, %Package{} = package} = Packages.create_package(@valid_attrs)
       assert package.name == "some name"
-      assert package.registry == "some registry"
+      assert package.registry == "npm"
 
       assert package.versions_updated_at ==
                DateTime.from_naive!(~N[2010-04-17T14:00:00Z], "Etc/UTC")
@@ -54,7 +54,7 @@ defmodule Xray.PackagesTest do
       package = package_fixture()
       assert {:ok, %Package{} = package} = Packages.update_package(package, @update_attrs)
       assert package.name == "some updated name"
-      assert package.registry == "some updated registry"
+      assert package.registry == "npm"
 
       assert package.versions_updated_at ==
                DateTime.from_naive!(~N[2011-05-18T15:01:01Z], "Etc/UTC")
@@ -85,56 +85,40 @@ defmodule Xray.PackagesTest do
     @update_attrs %{released_at: "2011-05-18T15:01:01Z", version: "some updated version"}
     @invalid_attrs %{released_at: nil, version: nil}
 
-    def version_fixture(attrs \\ %{}) do
-      {:ok, version} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Packages.create_version()
-
-      version
-    end
-
     test "list_versions/0 returns all versions" do
-      version = version_fixture()
-      assert Packages.list_versions() == [version]
+      # remove the package key because insert/1 will preload the package, whereas list_versions/0
+      # will not
+      version = insert(:version) |> Map.delete(:package)
+      listed_versions = Packages.list_versions() |> Enum.map(fn v -> Map.delete(v, :package) end)
+      assert listed_versions == [version]
     end
 
     test "get_version!/1 returns the version with given id" do
-      version = version_fixture()
-      assert Packages.get_version!(version.id) == version
-    end
-
-    test "create_version/1 with valid data creates a version" do
-      assert {:ok, %Version{} = version} = Packages.create_version(@valid_attrs)
-      assert version.released_at == DateTime.from_naive!(~N[2010-04-17T14:00:00Z], "Etc/UTC")
-      assert version.version == "some version"
-    end
-
-    test "create_version/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Packages.create_version(@invalid_attrs)
+      version = insert(:version) |> Map.delete(:package)
+      assert Packages.get_version!(version.id) |> Map.delete(:package) == version
     end
 
     test "update_version/2 with valid data updates the version" do
-      version = version_fixture()
+      version = insert(:version)
       assert {:ok, %Version{} = version} = Packages.update_version(version, @update_attrs)
       assert version.released_at == DateTime.from_naive!(~N[2011-05-18T15:01:01Z], "Etc/UTC")
       assert version.version == "some updated version"
     end
 
     test "update_version/2 with invalid data returns error changeset" do
-      version = version_fixture()
+      version = insert(:version) |> Map.delete(:package)
       assert {:error, %Ecto.Changeset{}} = Packages.update_version(version, @invalid_attrs)
-      assert version == Packages.get_version!(version.id)
+      assert version == Packages.get_version!(version.id) |> Map.delete(:package)
     end
 
     test "delete_version/1 deletes the version" do
-      version = version_fixture()
+      version = insert(:version)
       assert {:ok, %Version{}} = Packages.delete_version(version)
       assert_raise Ecto.NoResultsError, fn -> Packages.get_version!(version.id) end
     end
 
     test "change_version/1 returns a version changeset" do
-      version = version_fixture()
+      version = insert(:version)
       assert %Ecto.Changeset{} = Packages.change_version(version)
     end
   end

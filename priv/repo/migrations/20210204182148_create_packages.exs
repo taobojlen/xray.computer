@@ -11,6 +11,5 @@ defmodule Xray.Repo.Migrations.CreatePackages do
     end
 
     create unique_index(:packages, [:name, :registry])
-
   end
 end
