@@ -1,5 +1,5 @@
 defmodule XrayWeb.SelectSourceLive do
-  alias Xray.{Packages, Registry}
+  alias Xray.Registry
   use XrayWeb, :live_view
 
   @impl true
