@@ -6,8 +6,6 @@ defmodule Xray.Registry.Npm do
   alias Xray.{Registry, Util}
   alias Xray.Packages.{Package, Version}
 
-  # TODO: cache responses from npm
-
   @behaviour Registry.API
 
   @api Application.compile_env!(:xray, :npm_api)
@@ -25,7 +23,7 @@ defmodule Xray.Registry.Npm do
   end
 
   @impl true
-  def get_packages!() do
+  def get_packages! do
     path = Jaxon.Path.parse!("$.rows[*].key")
 
     @api.get_stream!("https://replicate.npmjs.com/_all_docs")

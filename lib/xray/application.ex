@@ -40,7 +40,7 @@ defmodule Xray.Application do
     Application.get_env(:xray, Oban)
   end
 
-  defp setup_tmp_dir() do
+  defp setup_tmp_dir do
     if dir = Application.get_env(:xray, :tmp_dir) do
       File.mkdir_p!(dir)
       Application.put_env(:xray, :tmp_dir, Path.expand(dir))

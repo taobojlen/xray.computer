@@ -1,5 +1,4 @@
 defmodule Xray.Registry do
-  alias Xray.Repo
   alias Xray.Packages.{Package, Version}
   alias Xray.Registry.Npm
 

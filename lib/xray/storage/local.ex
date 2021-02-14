@@ -30,7 +30,7 @@ defmodule Xray.Storage.Local do
   end
 
   @spec root() :: binary()
-  defp root() do
+  defp root do
     Application.get_env(:xray, :tmp_dir)
   end
 end

@@ -1,5 +1,5 @@
 defmodule XrayWeb.DiffLive do
-  alias Xray.Package
+  alias Xray.Packages.Package
   alias Xray.{Registry, Repo}
   use XrayWeb, :live_view
   import Ecto.Query

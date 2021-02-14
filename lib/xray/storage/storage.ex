@@ -29,7 +29,7 @@ defmodule Xray.Storage do
     repo.put(key, content)
   end
 
-  defp impl() do
+  defp impl do
     [implementation: implementation, name: _name] = Application.get_env(:xray, :bucket)
     implementation
   end

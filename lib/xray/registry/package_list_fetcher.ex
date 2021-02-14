@@ -5,7 +5,7 @@ defmodule Xray.Registry.PackageListFetcher do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"registry" => registry}}) do
-    packages = Registry.get_packages(registry)
+    packages = Registry.get_packages!(registry)
 
     packages
     |> Enum.chunk_every(1000)

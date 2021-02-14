@@ -1,6 +1,5 @@
 defmodule XrayWeb.SelectSourceLive do
-  alias Xray.{Packages, Registry, Repo}
-  import Ecto.Query
+  alias Xray.{Packages, Registry}
   use XrayWeb, :live_view
 
   @impl true

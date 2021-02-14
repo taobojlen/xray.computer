@@ -1,5 +1,0 @@
-<h1>Edit Version</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.version_path(@conn, :update, @version)) %>
-
-<span><%= link "Back", to: Routes.version_path(@conn, :index) %></span>

@@ -59,7 +59,7 @@ defmodule Xray.Source.SourceFetcher do
     Source.get_storage_key(package.registry, package.name, version.version) <> "/" <> filename
   end
 
-  defp get_registry() do
+  defp get_registry do
     Application.get_env(:xray, :registry)
   end
 end

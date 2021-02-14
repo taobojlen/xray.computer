@@ -109,20 +109,7 @@ defmodule Xray.Source do
   defp get_version(registry, package, version) do
     case Repo.get_by(Version, package_id: package.id, version: version) do
       nil ->
-        case @registry.get_versions(registry, package.name) do
-          {:ok, changesets} ->
-            changesets
-            |> Enum.map(&Map.merge(&1, %{package_id: package.id}))
-            |> Enum.each(&Repo.insert!/1)
-
-            case Repo.get_by(Version, package_id: package.id, version: version) do
-              nil -> {:error, "version does not exist"}
-              found -> {:ok, found}
-            end
-
-          {:error, error} ->
-            {:error, error}
-        end
+        get_unknown_version(registry, package, version)
 
       found ->
         {:ok, found}
@@ -137,5 +124,22 @@ defmodule Xray.Source do
       get_topic(registry, package, version),
       {__MODULE__, event, content}
     )
+  end
+
+  defp get_unknown_version(registry, package, version) do
+    case @registry.get_versions(registry, package.name) do
+      {:ok, changesets} ->
+        changesets
+        |> Enum.map(&Map.merge(&1, %{package_id: package.id}))
+        |> Enum.each(&Repo.insert!/1)
+
+        case Repo.get_by(Version, package_id: package.id, version: version) do
+          nil -> {:error, "version does not exist"}
+          found -> {:ok, found}
+        end
+
+      {:error, error} ->
+        {:error, error}
+    end
   end
 end
