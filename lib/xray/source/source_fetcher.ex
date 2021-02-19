@@ -6,9 +6,22 @@ defmodule Xray.Source.SourceFetcher do
   def perform(%Oban.Job{args: %{"id" => id}}) do
     version = Packages.get_version!(id)
     package = Packages.get_package!(version.package_id)
-    files_list_key = store_files(package, version)
-    Packages.update_version(version, %{source_key: files_list_key})
-    Source.notify_found_source(package.registry, package.name, version.version, files_list_key)
+
+    case store_files(package, version) do
+      {:ok, files_list_key} ->
+        Packages.update_version(version, %{source_key: files_list_key})
+
+        Source.notify_found_source(
+          package.registry,
+          package.name,
+          version.version,
+          files_list_key
+        )
+
+      {:error, error} ->
+        Source.notify_error(package.registry, package.name, version.version, error)
+    end
+
     :ok
   end
 
@@ -42,10 +55,10 @@ defmodule Xray.Source.SourceFetcher do
             Map.put(acc, filename, key)
           end)
 
-        save_files_list(files, package, version)
+        {:ok, save_files_list(files, package, version)}
 
       {:error, error} ->
-        raise error
+        {:error, error}
     end
   end
 

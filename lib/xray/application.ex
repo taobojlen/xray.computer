@@ -17,6 +17,7 @@ defmodule Xray.Application do
       {Phoenix.PubSub, name: Xray.PubSub},
       # Start the Endpoint (http/https)
       XrayWeb.Endpoint,
+      {Cachex, name: :api_cache},
       # Start queuing system
       {Oban, oban_config()},
       # Start scheduler

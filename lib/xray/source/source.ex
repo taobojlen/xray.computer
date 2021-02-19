@@ -47,6 +47,17 @@ defmodule Xray.Source do
     )
   end
 
+  @spec notify_error(registry, package, version, String.t()) :: :ok | {:error, term}
+  def notify_error(registry, package, version, error_message) do
+    notify_subscribers(
+      registry,
+      package,
+      version,
+      :error,
+      error_message
+    )
+  end
+
   @doc """
   Gets the source code for the given registry/package/version combo.
   Because this can be fast (if we already have the source) or slow (if we need to download
@@ -131,7 +142,7 @@ defmodule Xray.Source do
       {:ok, changesets} ->
         changesets
         |> Enum.map(&Map.merge(&1, %{package_id: package.id}))
-        |> Enum.each(&Repo.insert!/1)
+        |> Enum.each(fn p -> Repo.insert!(p, on_conflict: :nothing) end)
 
         case Repo.get_by(Version, package_id: package.id, version: version) do
           nil -> {:error, "version does not exist"}

@@ -5,15 +5,15 @@ import { Socket } from "phoenix";
 import NProgress from "nprogress";
 import { LiveSocket } from "phoenix_live_view";
 
-import hightlightSyntax from "./highlightSyntax";
+import Prism from "prismjs";
 
 const hooks = {
   codeUpdated: {
     mounted() {
-      hightlightSyntax((this as any).el);
+      Prism.highlightAll();
     },
     updated() {
-      hightlightSyntax((this as any).el);
+      Prism.highlightAll();
     },
   },
 };

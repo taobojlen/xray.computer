@@ -41,6 +41,9 @@ defmodule Xray.Registry.Npm do
           {:error, "package does not exist"}
         end
 
+      {:ok, %{body: %{"error" => error}}} ->
+        {:error, error}
+
       {:error, error} ->
         {:error, error}
     end
@@ -113,7 +116,7 @@ defmodule Xray.Registry.Npm do
       %{"time" => time} ->
         time
         |> Enum.filter(fn {version, _released_at} ->
-          not Enum.member?(["created", "modified"], version)
+          not Enum.member?(["created", "modified", "unpublished"], version)
         end)
         |> Enum.map(fn {version, released_at} ->
           with {:ok, timestamp, _offset} <- DateTime.from_iso8601(released_at) do

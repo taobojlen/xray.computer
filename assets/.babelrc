@@ -15,7 +15,9 @@
           "markdown",
           "elm"
         ],
-        "plugins": [],
+        "plugins": [
+          "line-numbers"
+        ],
         "css": true
       }
     ]

@@ -3,7 +3,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 @import "../node_modules/nprogress/nprogress.css";
-@import "./prism-atom-dark.css";
+@import "./coldark.css";
 
 .link-button {
   @apply text-gray-800 p-2 bg-gray-50 shadow-sm hover:bg-gray-200 hover:shadow rounded-lg ml-2;
@@ -14,7 +14,7 @@
 }
 
 .select {
-  @apply block p-2 rounded shadow focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 bg-white appearance-none;
+  @apply block p-2 rounded shadow focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 bg-white appearance-none focus:ring;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -22,7 +22,7 @@
 }
 
 .code {
-  @apply bg-white rounded p-6 pl-0 overflow-x-auto text-sm font-mono max-w-full;
+  @apply rounded max-w-full text-sm p-6;
   width: 70rem;
 }
 

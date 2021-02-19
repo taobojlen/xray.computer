@@ -25,7 +25,7 @@ defmodule Xray.MixProject do
   def application do
     [
       mod: {Xray.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :iex]
     ]
   end
 
@@ -62,7 +62,8 @@ defmodule Xray.MixProject do
       {:faker, "~> 0.16.0", only: :test},
       {:sobelow, "~> 0.11.0", only: [:dev, :test]},
       {:quantum, "~> 3.3"},
-      {:jaxon, "~> 2.0"}
+      {:jaxon, "~> 2.0"},
+      {:cachex, "~> 3.3"}
     ]
   end
 
