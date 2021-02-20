@@ -3,15 +3,15 @@
 ## To do
 - [x] Download full list of packages daily & use that for search
   - Stream download from npm since it's a large JSON file
-- [ ] Cache responses from registry
+- [x] Cache responses from registry
+- [ ] Add S3 storage
 - [ ] Write more tests
 - [ ] Implement diff
 - [ ] Add cronjob to clear tmp regularly
-- [ ] Add S3 storage
 - [ ] Put cursor in search field immediately when viewing page
-- [ ] Maybe: support from doing directly to diff from lockfile diff
+- [ ] Maybe: support for going directly to dependency diff from lockfile diff
 
-To start your Phoenix server:xray
+To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
