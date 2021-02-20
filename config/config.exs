@@ -11,7 +11,8 @@ config :xray,
   ecto_repos: [Xray.Repo],
   tmp_dir: "/tmp/xray",
   registry: Xray.Registry,
-  npm_api: Xray.Api.Npm
+  npm_api: Xray.Api.Npm,
+  httpoison: HTTPoison
 
 config :xray, :bucket,
   implementation: Xray.Storage.Local,

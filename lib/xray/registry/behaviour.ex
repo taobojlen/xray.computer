@@ -1,20 +1,33 @@
 defmodule Xray.Registry.Behaviour do
-  @moduledoc """
-  A behaviour to interface with package registries.
-  In production code, this behaviour is always implemented by Xray.Registry, but in tests
-  we might use a mock instead.
-  """
   alias Xray.Packages.{Package, Version}
 
-  @type registry :: String.t()
+  @moduledoc """
+  A specification for an individual package registry. Each registry should implement the functions
+  described here.
+  """
   @type package :: String.t()
   @type version :: String.t()
 
-  @callback get_registries() :: [registry]
-  @callback is_registry(String.t()) :: boolean()
-  @callback search(registry, String.t()) :: [package]
-  @callback get_packages!(registry) :: [package]
-  @callback get_package(registry, package) :: {:ok, Package.t()} | {:error, String.t()}
-  @callback get_versions(registry, package) :: {:ok, [Version.t()]} | {:error, String.t()}
-  @callback get_source(registry, package, version) :: {:ok, String.t()} | {:error, String.t()}
+  @doc """
+  Fetch a list of all packages in the registry.
+  """
+  @callback get_packages!() :: [package]
+
+  @doc """
+  Fetch details about the package and return a changeset ready to store in the database.
+  Note: the changeset should include associated versions!
+  """
+  @callback get_package(package) :: {:ok, Package.t()} | {:error, String.t()}
+
+  @doc """
+  Given a package name, return a list of versions for that package.
+  (Sorted by highest version to lowest).
+  """
+  @callback get_versions(package) :: {:ok, [Version.t()]} | {:error, String.t()}
+
+  @doc """
+  Download the source code for a given package and version.
+  Returns the (temporary) path at which it was saved.
+  """
+  @callback get_source(package, version) :: {:ok, String.t()} | {:error, String.t()}
 end

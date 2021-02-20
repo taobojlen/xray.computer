@@ -6,7 +6,7 @@ defmodule Xray.Registry.Npm do
   alias Xray.{Registry, Util}
   alias Xray.Packages.{Package, Version}
 
-  @behaviour Registry.API
+  @behaviour Registry.Behaviour
 
   @api Application.compile_env!(:xray, :npm_api)
 
@@ -22,7 +22,7 @@ defmodule Xray.Registry.Npm do
 
   @impl true
   def get_package(name) do
-    case @api.get("/" <> name) do
+    case @api.get(name) do
       {:ok, %{body: %{"name" => returned_name}}} ->
         if returned_name == name do
           with {:ok, versions} <- get_versions(name) do
@@ -51,7 +51,7 @@ defmodule Xray.Registry.Npm do
 
   @impl true
   def get_versions(package) do
-    case @api.get("/" <> package) do
+    case @api.get(package) do
       {:ok, response} ->
         {:ok, maybe_get_versions(response.body)}
 
@@ -95,7 +95,7 @@ defmodule Xray.Registry.Npm do
   end
 
   defp get_tarball_url(package, version) do
-    case @api.get("/" <> package) do
+    case @api.get(package) do
       {:ok, response} ->
         case get_in(response.body, ["versions", version, "dist", "tarball"]) do
           nil -> {:error, "Couldn't find tarball URL"}
