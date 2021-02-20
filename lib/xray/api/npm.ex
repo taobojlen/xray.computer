@@ -33,7 +33,7 @@ defmodule Xray.Api.Npm do
       {:ok, response} ->
         {:ok, response}
 
-      {:error, e} ->
+      {:error, _error} ->
         {:error, "Cache call failed"}
     end
   end
