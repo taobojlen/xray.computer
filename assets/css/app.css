@@ -21,7 +21,7 @@
   background-size: 16px 12px;
 }
 
-.code {
+.code-block {
   @apply rounded max-w-full text-sm p-6;
   width: 70rem;
 }
