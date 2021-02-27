@@ -4,7 +4,7 @@
 - [x] Download full list of packages daily & use that for search
   - Stream download from npm since it's a large JSON file
 - [x] Cache responses from registry
-- [ ] Add S3 storage
+- [x] Add S3 storage
 - [ ] Write more tests
 - [ ] Implement diff
 - [ ] Add cronjob to clear tmp regularly
@@ -29,3 +29,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+# Notes
+
+To use S3 storage, set the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.

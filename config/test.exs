@@ -5,6 +5,10 @@ config :xray,
   npm_api: Xray.Api.MockNpm,
   httpoison: MockHTTPoison
 
+config :xray, :bucket,
+  implementation: Xray.Storage.Local,
+  name: "xray"
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used

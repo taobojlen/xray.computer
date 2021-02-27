@@ -5,7 +5,7 @@ defmodule Xray.Api.NpmTest do
 
   describe "get" do
     test "caches responses" do
-      mock_response = %{body: "test response"}
+      mock_response = %{body: "{ \"key\": \"value\" }"}
 
       # Will error if called more than once
       MockHTTPoison

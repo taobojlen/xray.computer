@@ -1,6 +1,4 @@
-defmodule Xray.Api.CachedApi do
-  @behaviour __MODULE__.Contract
-
+defmodule Xray.Api.CachedJsonApi do
   @cache :api_cache
   @httpoison Application.compile_env!(:xray, :httpoison)
 

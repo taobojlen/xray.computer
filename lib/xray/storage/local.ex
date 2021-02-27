@@ -28,7 +28,7 @@ defmodule Xray.Storage.Local do
 
   @spec path(String.t()) :: binary()
   defp path(key) do
-    if String.contains?(key, "../") do
+    if String.contains?(key, "..") do
       raise "Invalid storage key: '#{key}'"
     end
 

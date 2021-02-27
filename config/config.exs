@@ -15,8 +15,16 @@ config :xray,
   httpoison: HTTPoison
 
 config :xray, :bucket,
-  implementation: Xray.Storage.Local,
+  implementation: Xray.Storage.S3,
   name: "xray"
+
+config :ex_aws,
+  region: "eu-central-1",
+  s3: [
+    scheme: "https://",
+    host: "s3.eu-central-1.wasabisys.com",
+    region: "eu-central-1"
+  ]
 
 config :xray, Oban,
   repo: Xray.Repo,

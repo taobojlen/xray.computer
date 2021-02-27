@@ -63,7 +63,10 @@ defmodule Xray.MixProject do
       {:sobelow, "~> 0.11.0", only: [:dev, :test]},
       {:quantum, "~> 3.3"},
       {:jaxon, "~> 2.0"},
-      {:cachex, "~> 3.3"}
+      {:cachex, "~> 3.3"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.1"},
+      {:temp, "~> 0.4.7"}
     ]
   end
 

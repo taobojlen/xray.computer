@@ -15,10 +15,16 @@ defmodule XrayWeb.SelectSourceLive do
     versions = Task.await(versions_task)
     suggestions = Task.await(suggestions_task)
 
+    version =
+      case versions do
+        [] -> nil
+        list -> hd(list)
+      end
+
     {:noreply,
      assign(socket,
        versions: versions,
-       version: hd(versions),
+       version: version,
        package: package,
        suggestions: suggestions
      )}
