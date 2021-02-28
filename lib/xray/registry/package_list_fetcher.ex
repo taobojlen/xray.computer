@@ -15,14 +15,16 @@ defmodule Xray.Registry.PackageListFetcher do
   end
 
   defp insert_packages(names, registry) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
     packages =
       names
       |> Enum.map(fn name ->
         %{
           name: name,
           registry: registry,
-          inserted_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second),
-          updated_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+          inserted_at: now,
+          updated_at: now
         }
       end)
 
