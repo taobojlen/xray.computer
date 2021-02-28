@@ -1,11 +1,16 @@
 defmodule Xray.Source.SourceFetcher do
   use Oban.Worker, queue: :source_fetcher
+  require Logger
   alias Xray.{Packages, Source, Storage}
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"id" => id}}) do
     version = Packages.get_version!(id)
     package = Packages.get_package!(version.package_id)
+
+    Logger.info(
+      "Getting source for #{package.registry} package #{package.name} v#{version.version}"
+    )
 
     case store_files(package, version) do
       {:ok, files_list_key} ->
@@ -39,6 +44,12 @@ defmodule Xray.Source.SourceFetcher do
             filename = Path.relative_to(path, tmp_path)
             Map.put(acc, filename, path)
           end)
+
+        Logger.debug(
+          "Storing #{files |> Map.keys() |> Kernel.length()} files for #{package.registry} #{
+            package.name
+          } v#{version.version}"
+        )
 
         files
         |> Enum.each(fn {filename, path} ->
