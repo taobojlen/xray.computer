@@ -25,7 +25,7 @@ defmodule Xray.MixProject do
   def application do
     [
       mod: {Xray.Application, []},
-      extra_applications: [:logger, :runtime_tools, :iex]
+      extra_applications: [:honeybadger, :logger, :runtime_tools, :iex]
     ]
   end
 
@@ -66,7 +66,7 @@ defmodule Xray.MixProject do
       {:cachex, "~> 3.3"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.1"},
-      {:temp, "~> 0.4.7"}
+      {:honeybadger, "~> 0.16.0"}
     ]
   end
 

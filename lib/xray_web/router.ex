@@ -1,5 +1,6 @@
 defmodule XrayWeb.Router do
   use XrayWeb, :router
+  use Honeybadger.Plug
 
   pipeline :browser do
     plug :accepts, ["html"]

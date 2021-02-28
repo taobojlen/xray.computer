@@ -11,6 +11,15 @@
 - [ ] Put cursor in search field immediately when viewing page
 - [ ] Maybe: support for going directly to dependency diff from lockfile diff
 
+# Configuration
+
+Xray expects the following environment variables:
+
+- `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` if using S3 for file storage
+- `HONEYBADGER_API_KEY` if using Honeybadger for error tracking
+
+# Developing
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
@@ -19,17 +28,3 @@ To start your Phoenix server:
   * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
-
-# Notes
-
-To use S3 storage, set the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
