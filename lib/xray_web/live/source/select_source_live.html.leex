@@ -26,24 +26,10 @@
     <% end %>
   </form>
 
-  <%= if length(@versions) > 0 do %>
-    <form phx-change="select_version" class="mt-6">
-      <label for="versions" class="text-sm text-gray-600">Version</label>
-      <select
-        name="v"
-        id="versions"
-        class="select mb-2 w-48"
-      >
-        <%= for version <- @versions do %>
-          <option value="<%= version %>"><%= version %></option>
-        <% end %>
-        <i class="fas fa-circle" />
-      </select>
-    </form>
+  <%# This child LiveView runs in its own process and has its own state to handle
+      getting versions asynchronously. We change its ID to re-render every time the user
+      inputs a package query; otherwise the new session data doesn't take effect.
+  %>
+  <%= live_render @socket, XrayWeb.VersionSelect, id: "version_select_#{@package}", session: %{"registry" => @registry, "package" => @package} %>
 
-    <button
-      phx-click="select"
-      class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-    >View source</button>
-  <% end %>
 </section>

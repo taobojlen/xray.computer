@@ -7,4 +7,9 @@ defmodule Xray.ErrorReporter do
   end
 end
 
-:telemetry.attach("oban-errors", [:oban, :job, :exception], &Xray.ErrorReporter.handle_event/4, [])
+:telemetry.attach(
+  "oban-errors",
+  [:oban, :job, :exception],
+  &Xray.ErrorReporter.handle_event/4,
+  []
+)

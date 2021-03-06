@@ -5,6 +5,9 @@
   - Stream download from npm since it's a large JSON file
 - [x] Cache responses from registry
 - [x] Add S3 storage
+- [x] Make version loading async
+- [ ] Keep file selector at top of screen
+- [ ] Include more detail in source loading state (progress bar?)
 - [ ] Write more tests
 - [ ] Implement diff
 - [ ] Add cronjob to clear tmp regularly
