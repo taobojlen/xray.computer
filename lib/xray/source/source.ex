@@ -3,8 +3,8 @@ defmodule Xray.Source do
   alias Xray.Packages.{Package, Version}
   alias Xray.Source.SourceFetcher
 
-  @type event :: :not_found | :found_source
-  @type event_content :: String.t() | nil
+  @type event :: :not_found | :found_source | :progress | :error
+  @type event_content :: String.t() | Integer.t() | nil
   @type registry :: String.t()
   @type package :: String.t()
   @type version :: String.t()
@@ -47,6 +47,17 @@ defmodule Xray.Source do
     )
   end
 
+  @spec notify_progress(registry, package, version, Integer.t()) :: :ok | {:error, term}
+  def notify_progress(registry, package, version, progress) do
+    notify_subscribers(
+      registry,
+      package,
+      version,
+      :progress,
+      progress
+    )
+  end
+
   @spec notify_error(registry, package, version, String.t()) :: :ok | {:error, term}
   def notify_error(registry, package, version, error_message) do
     notify_subscribers(
@@ -67,8 +78,6 @@ defmodule Xray.Source do
   """
   @spec get_source(registry, package, version) :: :ok
   def get_source(registry, package, version) do
-    IO.puts("getting source #{registry} #{package} #{version}")
-
     if @registry.is_registry(registry) do
       get_package_and_version(registry, package, version)
     else

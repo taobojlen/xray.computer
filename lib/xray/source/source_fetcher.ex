@@ -1,5 +1,8 @@
 defmodule Xray.Source.SourceFetcher do
-  use Oban.Worker, queue: :source_fetcher
+  use Oban.Worker,
+    queue: :source_fetcher,
+    unique: [period: :infinity]
+
   require Logger
   alias Xray.{Packages, Source, Storage}
 
@@ -51,11 +54,16 @@ defmodule Xray.Source.SourceFetcher do
           } v#{version.version}"
         )
 
+        Source.notify_progress(package.registry, package.name, version.version, 0)
+
         files
-        |> Enum.each(fn {filename, path} ->
+        |> Enum.with_index()
+        |> Enum.each(fn {{filename, path}, index} ->
           content = File.read!(path)
           key = get_storage_key(package, version, filename)
           Storage.put(key, content)
+          progress = index / map_size(files)
+          Source.notify_progress(package.registry, package.name, version.version, progress)
         end)
 
         File.rm_rf!(tmp_path)

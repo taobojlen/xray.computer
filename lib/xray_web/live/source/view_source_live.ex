@@ -33,6 +33,7 @@ defmodule XrayWeb.ViewSourceLive do
       |> assign(current_file: filename)
       |> assign(code: nil)
       |> assign(file_type: nil)
+      |> assign(progress: nil)
 
     {:ok, socket}
   end
@@ -85,6 +86,11 @@ defmodule XrayWeb.ViewSourceLive do
       ) do
     Source.unsubscribe(registry, package, version)
     {:noreply, assign(socket, loading: false, error: error)}
+  end
+
+  @impl true
+  def handle_info({Source, :progress, progress}, socket) do
+    {:noreply, assign(socket, progress: progress)}
   end
 
   @impl true
