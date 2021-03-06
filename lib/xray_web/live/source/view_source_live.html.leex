@@ -5,7 +5,7 @@
     <h2 class="text-red-600 text-bold"><%= @error %></h2>
   <% else %>
     <%= if @loading do %>
-        <span class="mt-4">Fetching source code from <%= @registry %>...</span>
+        <span class="mt-4 mb-2 text-sm">Fetching source code from <%= @registry %>...</span>
         <div class="progress-bar-wrapper">
           <div class="progress-bar" style="width: <%= if @progress, do: @progress * 100, else: 100 %>%"></div>
         </div>

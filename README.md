@@ -8,11 +8,11 @@
 - [x] Make version loading async
 - [x] Add suggested packages
 - [x] Keep file selector at top of screen
-- [ ] Include more detail in source loading state (progress bar?)
+- [x] Include more detail in source loading state (progress bar?)
+- [x] Put cursor in search field immediately when viewing page
 - [ ] Write more tests
 - [ ] Implement diff
 - [ ] Add cronjob to clear tmp regularly
-- [ ] Put cursor in search field immediately when viewing page
 - [ ] Maybe: support for going directly to dependency diff from lockfile diff
 
 # Configuration

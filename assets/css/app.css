@@ -6,11 +6,11 @@
 @import "./coldark.css";
 
 .link-button {
-  @apply text-gray-800 p-2 bg-gray-50 shadow-sm hover:bg-gray-200 hover:shadow rounded-lg ml-2;
+  @apply text-gray-800 p-2 bg-white shadow-sm hover:bg-gray-50 hover:shadow rounded-lg ml-2;
 }
 
 .link-button.active {
-  @apply underline bg-gray-200;
+  @apply font-bold bg-blue-100 hover:bg-blue-200;
 }
 
 .select {
