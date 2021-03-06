@@ -27,7 +27,6 @@ defmodule XrayWeb.SelectSourceLive do
     {:noreply, assign(socket, package: package)}
   end
 
-  @impl true
   defp get_suggestions(registry, query) do
     Registry.search(registry, query)
     |> Enum.slice(0, 3)

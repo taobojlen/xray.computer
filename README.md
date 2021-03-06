@@ -6,6 +6,7 @@
 - [x] Cache responses from registry
 - [x] Add S3 storage
 - [x] Make version loading async
+- [x] Add suggested packages
 - [ ] Keep file selector at top of screen
 - [ ] Include more detail in source loading state (progress bar?)
 - [ ] Write more tests

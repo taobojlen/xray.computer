@@ -9,7 +9,7 @@ defmodule XrayWeb.ViewSourceLive do
     package = URI.decode(package) |> String.replace(" ", "/")
     version = URI.decode(version)
     Source.subscribe(registry, package, version)
-    Source.get_source(registry, package, version)
+    Task.start_link(fn -> Source.get_source(registry, package, version) end)
 
     filename =
       if params["filename"] do

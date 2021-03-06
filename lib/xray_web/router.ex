@@ -17,8 +17,8 @@ defmodule XrayWeb.Router do
     get "/", BaseController, :show
     live "/diff", DiffLive, :index
     live "/source", SelectSourceLive, :index
-    live "/source/:package/:version", ViewSourceLive, :index
-    live "/source/:package/:version/:filename", ViewSourceLive, :index
+    live "/source/:registry/:package/:version", ViewSourceLive, :index
+    live "/source/:registry/:package/:version/:filename", ViewSourceLive, :index
   end
 
   # Enables LiveDashboard only for development

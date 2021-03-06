@@ -113,12 +113,11 @@ defmodule Xray.Registry.Npm do
 
   defp maybe_get_versions(body) do
     case body do
-      %{"time" => time} ->
-        time
-        |> Enum.filter(fn {version, _released_at} ->
-          not Enum.member?(["created", "modified", "unpublished"], version)
-        end)
-        |> Enum.map(fn {version, released_at} ->
+      %{"versions" => versions} ->
+        Map.keys(versions)
+        |> Enum.map(fn version ->
+          released_at = get_version_released_at(version, body)
+
           with {:ok, timestamp, _offset} <- DateTime.from_iso8601(released_at) do
             %Version{
               version: version,
@@ -126,11 +125,22 @@ defmodule Xray.Registry.Npm do
             }
           end
         end)
-        |> Enum.sort_by(fn %{released_at: released_at} -> released_at end, DateTime)
         |> Enum.reverse()
+
+      # TODO: sort
 
       _ ->
         []
+    end
+  end
+
+  defp get_version_released_at(version, body) do
+    case body do
+      %{"time" => time} ->
+        Map.get(time, version)
+
+      _ ->
+        nil
     end
   end
 end

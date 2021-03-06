@@ -10,7 +10,7 @@ defmodule XrayWeb.VersionSelect do
   @impl true
   def mount(_params, %{"registry" => registry, "package" => package}, socket) do
     VersionListFetcher.subscribe(registry, package)
-    VersionListFetcher.get_versions(registry, package)
+    Task.start_link(fn -> VersionListFetcher.get_versions(registry, package) end)
 
     socket =
       socket
@@ -29,12 +29,16 @@ defmodule XrayWeb.VersionSelect do
   end
 
   @impl true
-  def handle_event("select", _params, %{assigns: %{package: package, version: version}} = socket) do
+  def handle_event(
+        "select",
+        _params,
+        %{assigns: %{registry: registry, package: package, version: version}} = socket
+      ) do
     # Scoped packages may contain slashes. To avoid breaking our routes, replace them with something
     # else
     package = package |> String.replace("/", " ") |> URI.encode()
     version = URI.encode(version)
-    {:noreply, push_redirect(socket, to: "/source/#{package}/#{version}")}
+    {:noreply, push_redirect(socket, to: "/source/#{registry}/#{package}/#{version}")}
   end
 
   @impl true

@@ -11,18 +11,33 @@
         placeholder="Select a package"
         autocomplete="off"
         phx-debounce="300"
-        class="block p-2 mb-2 w-48 rounded shadow focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
+        class="block p-2 mb-4 w-56 rounded shadow focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
       />
     </div>
-    <%= if length(@suggestions) > 0 do %>
-      <p class="text-sm">Did you mean?</p>
-    <% end %>
-    <%= for suggestion <- @suggestions do %>
-      <span
-        phx-click="select_package"
-        phx-value-package="<%= suggestion %>"
-        class="bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
-      ><%= suggestion %></span>
+    <%= if Enum.empty?(@suggestions) and is_nil(@package) do %>
+      <p class="text-sm">Suggestions</p>
+      <%= for suggestion <- ["lodash", "react", "chalk", "axios"] do %>
+        <span
+          phx-click="select_package"
+          phx-value-package="<%= suggestion %>"
+          class="bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
+        >
+          <%= suggestion %>
+        </span>
+      <% end %>
+    <% else %>
+      <%= if not Enum.empty?(@suggestions) do %>
+        <p class="text-sm">Did you mean?</p>
+        <%= for suggestion <- @suggestions do %>
+          <span
+            phx-click="select_package"
+            phx-value-package="<%= suggestion %>"
+            class="bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1 cursor-pointer hover:bg-gray-300 hover:text-gray-700"
+          >
+            <%= suggestion %>
+          </span>
+        <% end %>
+      <% end %>
     <% end %>
   </form>
 

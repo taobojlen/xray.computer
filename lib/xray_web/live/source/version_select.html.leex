@@ -1,6 +1,8 @@
 <%= if @loading do %>
-  <div class="loading-spinner mt-6"></div>
-  <span class="mt-4">Fetching versions...</span>
+  <div class="flex flex-col items-center">
+    <div class="loading-spinner mt-6 mb-2"></div>
+    <span class="text-gray-500 text-sm">Fetching versions...</span>
+  </div>
 <% end %>
 
 <%= if length(@versions) > 0 do %>
@@ -9,7 +11,7 @@
     <select
       name="v"
       id="versions"
-      class="select mb-2 w-48"
+      class="select mb-2 w-56"
     >
       <%= for version <- @versions do %>
         <option value="<%= version %>"><%= version %></option>
