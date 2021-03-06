@@ -4,8 +4,11 @@ defmodule XrayWeb.ViewSourceLive do
   alias Xray.{Source, Storage}
 
   @impl true
-  def mount(%{"package" => package, "version" => version} = params, _session, socket) do
-    registry = "npm"
+  def mount(
+        %{"registry" => registry, "package" => package, "version" => version} = params,
+        _session,
+        socket
+      ) do
     package = URI.decode(package) |> String.replace(" ", "/")
     version = URI.decode(version)
     Source.subscribe(registry, package, version)
@@ -18,27 +21,28 @@ defmodule XrayWeb.ViewSourceLive do
         nil
       end
 
-    {:ok,
-     assign(
-       socket,
-       registry: registry,
-       package: package,
-       version: version,
-       loading: true,
-       error: nil,
-       files: %{},
-       files_list: [],
-       current_file: filename,
-       code: nil,
-       file_type: nil
-     )}
+    socket =
+      socket
+      |> assign(registry: registry)
+      |> assign(package: package)
+      |> assign(version: version)
+      |> assign(loading: true)
+      |> assign(error: nil)
+      |> assign(files: %{})
+      |> assign(files_list: [])
+      |> assign(current_file: filename)
+      |> assign(code: nil)
+      |> assign(file_type: nil)
+
+    {:ok, socket}
   end
 
   @impl true
   def handle_event(
         "select_file",
         %{"f" => filename},
-        %{assigns: %{package: package, version: version, files: files}} = socket
+        %{assigns: %{registry: registry, package: package, version: version, files: files}} =
+          socket
       ) do
     content =
       files
@@ -55,7 +59,7 @@ defmodule XrayWeb.ViewSourceLive do
 
     {:noreply,
      push_patch(socket,
-       to: Routes.view_source_path(socket, :index, package, version, filename),
+       to: Routes.view_source_path(socket, :index, registry, package, version, filename),
        replace: true
      )}
   end
@@ -86,7 +90,14 @@ defmodule XrayWeb.ViewSourceLive do
   @impl true
   def handle_info(
         {Source, :found_source, files_list_key},
-        %{assigns: %{current_file: filename, package: package, version: version}} = socket
+        %{
+          assigns: %{
+            current_file: filename,
+            registry: registry,
+            package: package,
+            version: version
+          }
+        } = socket
       ) do
     files =
       Storage.get(files_list_key)
@@ -123,7 +134,7 @@ defmodule XrayWeb.ViewSourceLive do
 
     {:noreply,
      push_patch(socket,
-       to: Routes.view_source_path(socket, :index, package, version, filename),
+       to: Routes.view_source_path(socket, :index, registry, package, version, filename),
        replace: true
      )}
   end

@@ -67,6 +67,8 @@ defmodule Xray.Source do
   """
   @spec get_source(registry, package, version) :: :ok
   def get_source(registry, package, version) do
+    IO.puts("getting source #{registry} #{package} #{version}")
+
     if @registry.is_registry(registry) do
       get_package_and_version(registry, package, version)
     else
