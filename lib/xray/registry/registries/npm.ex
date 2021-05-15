@@ -127,8 +127,6 @@ defmodule Xray.Registry.Npm do
         end)
         |> Enum.reverse()
 
-      # TODO: sort
-
       _ ->
         []
     end

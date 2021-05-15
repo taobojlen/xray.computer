@@ -21,7 +21,6 @@ defmodule Xray.Registry.Behaviour do
 
   @doc """
   Given a package name, return a list of versions for that package.
-  (Sorted by highest version to lowest).
   """
   @callback get_versions(package) :: {:ok, [Version.t()]} | {:error, String.t()}
 

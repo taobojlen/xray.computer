@@ -21,4 +21,22 @@ defmodule Xray.Util do
       |> Map.new()
     end
   end
+
+  @doc """
+  Sorts a list of SemVer-compliant strings in decreasing order.
+  Any version strings that aren't compliant may end up in weird places in the order.
+  """
+  @spec sort_versions([String.t()]) :: [String.t()]
+  def sort_versions(versions) do
+    versions
+    |> Enum.sort(&compare_versions/2)
+  end
+
+  defp compare_versions(first, second) do
+    with {:ok, first} <- Version.parse(first), {:ok, second} <- Version.parse(second) do
+      Version.compare(first, second) == :gt
+    else
+      _error -> false
+    end
+  end
 end

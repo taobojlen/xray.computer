@@ -1,5 +1,5 @@
 defmodule XrayWeb.VersionSelect do
-  alias Xray.VersionListFetcher
+  alias Xray.{VersionListFetcher, Util}
   use XrayWeb, :live_view
 
   @impl true
@@ -43,6 +43,8 @@ defmodule XrayWeb.VersionSelect do
 
   @impl true
   def handle_info({VersionListFetcher, :got_versions, versions}, socket) do
+    versions = Util.sort_versions(versions)
+
     version =
       case versions do
         [] -> nil
