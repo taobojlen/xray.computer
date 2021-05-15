@@ -1,4 +1,4 @@
-<section class="flex flex-col items-center justify-center w-80">
+<section class="flex flex-col items-center justify-center w-96">
   <h1 class="text-xl text-bold mb-10">View source</h1>
 
   <form phx-change="type">
@@ -8,7 +8,7 @@
         type="text"
         name="p"
         value="<%= @package %>"
-        placeholder="Select a package"
+        placeholder="Search for a package"
         autocomplete="off"
         autofocus="true"
         phx-debounce="300"

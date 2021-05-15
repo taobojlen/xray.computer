@@ -4,7 +4,8 @@ defmodule XrayWeb.SelectSourceLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, registry: "npm", package: nil, suggestions: [])}
+    {:ok,
+     assign(socket, registry: "npm", package: nil, suggestions: [], page_title: "View source")}
   end
 
   @impl true

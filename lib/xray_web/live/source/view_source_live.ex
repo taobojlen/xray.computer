@@ -34,6 +34,7 @@ defmodule XrayWeb.ViewSourceLive do
       |> assign(code: nil)
       |> assign(file_type: nil)
       |> assign(progress: nil)
+      |> assign(page_title: "#{package} #{version}")
 
     {:ok, socket}
   end

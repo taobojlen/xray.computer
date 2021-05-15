@@ -6,7 +6,7 @@ defmodule XrayWeb.DiffLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: [], package: %{})}
+    {:ok, assign(socket, query: "", results: [], package: %{}, page_title: "Diff")}
   end
 
   @impl true
