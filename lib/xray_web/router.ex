@@ -11,6 +11,10 @@ defmodule XrayWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  scope "/_health", log: false do
+    forward "/", Xray.HealthCheck
+  end
+
   scope "/", XrayWeb do
     pipe_through :browser
 
