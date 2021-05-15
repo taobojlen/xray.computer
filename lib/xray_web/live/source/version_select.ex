@@ -1,5 +1,5 @@
 defmodule XrayWeb.VersionSelect do
-  alias Xray.{VersionListFetcher, Util}
+  alias Xray.{Util, VersionListFetcher}
   use XrayWeb, :live_view
 
   @impl true

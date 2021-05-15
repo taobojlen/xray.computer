@@ -1,0 +1,13 @@
+<article class="space-y-2">
+  <h2 class="text-bold text-lg text-center mb-3">About</h2>
+
+  <p>If you do your due diligence when installing new dependencies in your project, you've probably
+  gone to that dependency's GitHub to have a look at its source code. However, there's no guarantee
+  that the code on GitHub is what was actually published to npm.</p>
+
+  <p>xray.computer is a web-based alternative to commands like
+  <a href="https://docs.npmjs.com/cli/v7/commands/npm-pack"><code>npm pack</code></a>. It lets you read
+  the exact code you'll be running when you install a package.
+  For now, it's just a quick way to preview code -- but more features are coming...
+  </p>
+<article>

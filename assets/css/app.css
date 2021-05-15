@@ -5,6 +5,19 @@
 @import "../node_modules/nprogress/nprogress.css";
 @import "./coldark.css";
 
+html,
+body {
+  height: 100%;
+}
+
+iframe[src="/phoenix/live_reload/frame"] {
+  display: none;
+}
+
+a {
+  @apply underline;
+}
+
 .link-button {
   @apply text-gray-800 p-2 bg-white shadow-sm hover:bg-gray-50 hover:shadow rounded-lg ml-2;
 }

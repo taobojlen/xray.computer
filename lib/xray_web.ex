@@ -45,7 +45,8 @@ defmodule XrayWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {XrayWeb.LayoutView, "live.html"}
+        layout: {XrayWeb.LayoutView, "live.html"},
+        container: {:div, class: "flex-grow"}
 
       unquote(view_helpers())
     end

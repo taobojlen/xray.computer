@@ -15,6 +15,7 @@ defmodule XrayWeb.Router do
     pipe_through :browser
 
     get "/", BaseController, :show
+    get "/about", BaseController, :about
     # live "/diff", DiffLive, :index
     live "/source", SelectSourceLive, :index
     live "/source/:registry/:package/:version", ViewSourceLive, :index
