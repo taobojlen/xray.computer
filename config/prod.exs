@@ -11,6 +11,10 @@ use Mix.Config
 # before starting your production server.
 config :xray, XrayWeb.Endpoint,
   url: [host: System.get_env("RENDER_EXTERNAL_HOSTNAME") || "localhost", port: 80],
+  check_origin: [
+    "https://" <> System.get_env("RENDER_EXTERNAL_HOSTNAME"),
+    "https://xray.computer"
+  ],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
