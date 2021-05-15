@@ -8,7 +8,6 @@
     <%= live_title_tag assigns[:page_title] || "Home", suffix: " | xray.computer" %>
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-    <script defer src="https://kit.fontawesome.com/5b070aaaeb.js" crossorigin="anonymous" integrity="sha384-id0jiems3o9ouGyeifwMRH3YqquhZQo6a3yZ7XuKK1sNO1X2or5zX2oe+7gT6+IB"></script>
     <script async defer data-domain="xray.computer" src="https://plausible.cursed.technology/js/plausible.js"></script>
   </head>
   <body class="bg-gray-100 flex flex-col">
@@ -17,12 +16,8 @@
         <h1 class="text-center mt-6 mb-3 text-xl font-bold">xray.computer</h1>
       <% end %>
       <nav role="navigation" class="flex w-full items-center justify-center mb-10 space-x-4 hidden">
-        <%# <%= link to: Routes.diff_path(@conn, :index), class: active_class(@conn, Routes.diff_path(@conn, :index)) do %>
-          <%# <i class="fas fa-code-branch mr-1"></i> Diff %>
-        <%# <% end %>
-        <%= link to: "/source", class: active_class(@conn, Routes.select_source_path(@conn, :index)) do %>
-          <i class="fas fa-code mr-1"></i> Source
-        <% end %>
+        <%# <%= link "Diff", to: Routes.diff_path(@conn, :index), class: active_class(@conn, Routes.diff_path(@conn, :index)) %> %>
+        <%= link "Source", to: "/source", class: active_class(@conn, Routes.select_source_path(@conn, :index)) %>
       </nav>
     </header>
     <%= @inner_content %>
