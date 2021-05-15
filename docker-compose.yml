@@ -1,0 +1,15 @@
+version: "3"
+services:
+  db:
+    image: postgres:13.3-alpine
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DATABASE: xray_dev
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
