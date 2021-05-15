@@ -5,7 +5,6 @@ stages:
 .elixir:
   image: elixir:1.11.3
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
     paths:
       - _build
       - deps
