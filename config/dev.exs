@@ -1,5 +1,9 @@
 use Mix.Config
 
+config :xray, :bucket,
+  implementation: Xray.Storage.S3,
+  name: "xray-dev"
+
 # Configure your database
 config :xray, Xray.Repo,
   username: "postgres",

@@ -5,7 +5,7 @@ defmodule Xray.HealthCheck do
 
   def call(%Plug.Conn{request_path: "/_health"} = conn, _opts) do
     conn
-    |> send_resp(200, "")
+    |> send_resp(200, "OK")
     |> halt()
   end
 
