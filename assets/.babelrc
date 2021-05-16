@@ -16,7 +16,7 @@
           "elm"
         ],
         "plugins": [
-          "line-numbers"
+          "lines"
         ],
         "css": true
       }

@@ -34,9 +34,16 @@ defmodule XrayWeb.ViewSourceLive do
       |> assign(code: nil)
       |> assign(file_type: nil)
       |> assign(progress: nil)
+      |> assign(uri_hash: nil)
       |> assign(page_title: "#{package} #{version}")
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(_unsigned_params, uri, socket) do
+    %{fragment: fragment} = URI.parse(uri)
+    {:noreply, assign(socket, uri_hash: fragment)}
   end
 
   @impl true
@@ -102,7 +109,8 @@ defmodule XrayWeb.ViewSourceLive do
             current_file: filename,
             registry: registry,
             package: package,
-            version: version
+            version: version,
+            uri_hash: uri_hash
           }
         } = socket
       ) do
@@ -139,9 +147,18 @@ defmodule XrayWeb.ViewSourceLive do
         loading: false
       )
 
+    destination = Routes.view_source_path(socket, :index, registry, package, version, filename)
+
+    destination =
+      if is_nil(uri_hash) do
+        destination
+      else
+        "#{destination}##{uri_hash}"
+      end
+
     {:noreply,
      push_patch(socket,
-       to: Routes.view_source_path(socket, :index, registry, package, version, filename),
+       to: destination,
        replace: true
      )}
   end
