@@ -74,11 +74,6 @@ defmodule XrayWeb.ViewSourceLive do
   end
 
   @impl true
-  def handle_params(_params, _uri, socket) do
-    {:noreply, socket}
-  end
-
-  @impl true
   def handle_info(
         {Source, :not_found, _content},
         %{assigns: %{registry: registry, package: package, version: version}} = socket
