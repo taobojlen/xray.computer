@@ -10,7 +10,14 @@ defmodule XrayWeb.SelectSourceLive do
 
   @impl true
   def handle_event("type", %{"p" => package}, %{assigns: %{registry: registry}} = socket) do
-    suggestions = get_suggestions(registry, package)
+    suggestions =
+      case package do
+        nil -> []
+        "" -> []
+        string -> get_suggestions(registry, string)
+      end
+
+    package = if package == "", do: nil, else: package
 
     {:noreply,
      assign(socket,
