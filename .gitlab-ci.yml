@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - deploy
 
 .elixir:
   image: elixir:1.11.3
@@ -45,3 +46,18 @@ lint:
     - mix format --check-formatted
     - mix credo --strict
     - mix sobelow --config --private
+
+deploy_production:
+  stage: deploy
+  image: dokku/ci-docker-image
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  environment:
+    name: production
+  variables:
+    GIT_REMOTE_URL: ssh://dokku@116.203.28.236:22/xray
+    BRANCH: main
+    GIT_DEPTH: 0
+  script: dokku-deploy
+  after_script: [dokku-unlock]
+  interruptible: true
