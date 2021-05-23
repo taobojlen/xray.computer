@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dokku": {
+      "postdeploy": "curl -g https://api.honeybadger.io/v1/deploys?deploy[environment]=production&api_key=hbp_8gUblarF0JuRwVHNFVXd6T32yMPuAu0m4EpS"
+    }
+  }
+}
