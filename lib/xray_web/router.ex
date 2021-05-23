@@ -3,23 +3,23 @@ defmodule XrayWeb.Router do
   use Honeybadger.Plug
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {XrayWeb.LayoutView, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {XrayWeb.LayoutView, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   scope "/", XrayWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", BaseController, :show
-    get "/about", BaseController, :about
-    # live "/diff", DiffLive, :index
-    live "/source", SelectSourceLive, :index
-    live "/source/:registry/:package/:version", ViewSourceLive, :index
-    live "/source/:registry/:package/:version/:filename", ViewSourceLive, :index
+    get("/", BaseController, :show)
+    live("/about", AboutLive, :index)
+    live("/diff", DiffLive, :index)
+    live("/source", SelectSourceLive, :index)
+    live("/source/:registry/:package/:version", ViewSourceLive, :index)
+    live("/source/:registry/:package/:version/:filename", ViewSourceLive, :index)
   end
 
   # Enables LiveDashboard only for development
@@ -33,8 +33,8 @@ defmodule XrayWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: XrayWeb.Telemetry
+      pipe_through(:browser)
+      live_dashboard("/dashboard", metrics: XrayWeb.Telemetry)
     end
   end
 end

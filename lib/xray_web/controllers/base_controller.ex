@@ -4,8 +4,4 @@ defmodule XrayWeb.BaseController do
   def show(conn, _params) do
     redirect(conn, to: "/source")
   end
-
-  def about(conn, _params) do
-    render(conn, "about.html")
-  end
 end

@@ -21,6 +21,14 @@ defmodule Xray.Packages do
     Repo.all(Package)
   end
 
+  def package_exists?(registry, name) do
+    Repo.exists?(
+      from p in Package,
+        where:
+          p.registry == ^registry and fragment("lower(?)", p.name) == fragment("lower(?)", ^name)
+    )
+  end
+
   @doc """
   Gets a single package.
 
@@ -130,6 +138,15 @@ defmodule Xray.Packages do
 
   """
   def get_version!(id), do: Repo.get!(Version, id)
+
+  def get_version(registry, package, version) do
+    Repo.one(
+      from v in Version,
+        join: p in Package,
+        on: v.package_id == p.id,
+        where: p.registry == ^registry and p.name == ^package and v.version == ^version
+    )
+  end
 
   @doc """
   Updates a version.
