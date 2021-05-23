@@ -58,12 +58,14 @@ defmodule XrayWeb.ViewSourceLive do
   end
 
   @impl true
-  def render(assigns) do
+  def render(%{released_at: released_at} = assigns) do
+    subtitle = if is_nil(released_at), do: nil, else: "Released " <> released_at
+
     ~H"""
     <MainPage
       page="source"
       title={{ @page_title}}
-      subtitle={{ "Released " <> @released_at }}
+      subtitle={{ subtitle }}
       wide={{ true }}
     >
       <div :if={{ @loading }} class="mt-10">
