@@ -47,7 +47,11 @@ defmodule Xray.Registry do
   def get_versions(registry, package) do
     impl = get_registry(registry)
     # TODO: update last_updated for package
-    impl.get_versions(package)
+    if package == "" do
+      []
+    else
+      impl.get_versions(package)
+    end
   end
 
   @impl true

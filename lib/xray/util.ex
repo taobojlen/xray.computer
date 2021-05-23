@@ -32,6 +32,16 @@ defmodule Xray.Util do
     |> Enum.sort(&compare_versions/2)
   end
 
+  def beautify_datetime(nil) do
+    nil
+  end
+
+  def beautify_datetime(%{year: year, month: month, day: day}) do
+    month = month |> Integer.to_string() |> String.pad_leading(2, "0")
+    day = day |> Integer.to_string() |> String.pad_leading(2, "0")
+    "#{year}-#{month}-#{day}"
+  end
+
   defp compare_versions(first, second) do
     with {:ok, first} <- Version.parse(first), {:ok, second} <- Version.parse(second) do
       Version.compare(first, second) == :gt

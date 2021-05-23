@@ -1,7 +1,25 @@
 defmodule XrayWeb.ViewSourceLive do
-  use XrayWeb, :live_view
-  # alias Xray.Packages.{Package, Version}
-  alias Xray.{Source, Storage}
+  use Surface.LiveView
+  alias XrayWeb.Components.{FileSelect, MainPage, SourceCode, SourceLoadingBar}
+  alias XrayWeb.Router.Helpers
+
+  alias Xray.{Packages, Source, Storage, Util}
+
+  data page_title, :string
+  data registry, :string
+  data package, :string
+  data version, :string
+  data loading, :boolean, default: true
+  data progress, :decimal, default: 1
+  # TODO: show error to user
+  data error, :string, default: nil
+  data filename, :string, default: nil
+  data files, :map, default: %{}
+  data current_file, :string, default: nil
+  data file_type, :string, default: nil
+  data code, :string, default: nil
+  data uri_hash, :string, default: nil
+  data released_at, :datetime, default: nil
 
   @impl true
   def mount(
@@ -26,16 +44,9 @@ defmodule XrayWeb.ViewSourceLive do
       |> assign(registry: registry)
       |> assign(package: package)
       |> assign(version: version)
-      |> assign(loading: true)
-      |> assign(error: nil)
-      |> assign(files: %{})
-      |> assign(files_list: [])
       |> assign(current_file: filename)
-      |> assign(code: nil)
-      |> assign(file_type: nil)
-      |> assign(progress: nil)
-      |> assign(uri_hash: nil)
       |> assign(page_title: "#{package} #{version}")
+      |> assign_released_at()
 
     {:ok, socket}
   end
@@ -47,9 +58,41 @@ defmodule XrayWeb.ViewSourceLive do
   end
 
   @impl true
+  def render(assigns) do
+    ~H"""
+    <MainPage
+      page="source"
+      title={{ @page_title}}
+      subtitle={{ "Released " <> @released_at }}
+      wide={{ true }}
+    >
+      <div :if={{ @loading }} class="mt-10">
+        <SourceLoadingBar
+          registry={{ @registry }}
+          progress={{ @progress }}
+        />
+      </div>
+      <div
+        :if={{ not @loading }}
+      >
+        <FileSelect
+          files={{ Map.keys(@files) }}
+          current_file={{ @current_file }}
+          select_file="select_file"
+        />
+        <SourceCode
+          code={{ @code }}
+          file_type={{ @file_type }}
+        />
+      </div>
+    </MainPage>
+    """
+  end
+
+  @impl true
   def handle_event(
         "select_file",
-        %{"f" => filename},
+        %{"file" => filename},
         %{assigns: %{registry: registry, package: package, version: version, files: files}} =
           socket
       ) do
@@ -68,7 +111,7 @@ defmodule XrayWeb.ViewSourceLive do
 
     {:noreply,
      push_patch(socket,
-       to: Routes.view_source_path(socket, :index, registry, package, version, filename),
+       to: Helpers.view_source_path(socket, :index, registry, package, version, filename),
        replace: true
      )}
   end
@@ -133,16 +176,16 @@ defmodule XrayWeb.ViewSourceLive do
     file_type = get_file_extension(filename)
 
     socket =
-      assign(socket,
-        files: files,
-        files_list: files_list,
-        current_file: filename,
-        code: content,
-        file_type: file_type,
-        loading: false
-      )
+      socket
+      |> assign(files: files)
+      |> assign(files_list: files_list)
+      |> assign(current_file: filename)
+      |> assign(code: content)
+      |> assign(file_type: file_type)
+      |> assign(loading: false)
+      |> assign_released_at()
 
-    destination = Routes.view_source_path(socket, :index, registry, package, version, filename)
+    destination = Helpers.view_source_path(socket, :index, registry, package, version, filename)
 
     destination =
       if is_nil(uri_hash) do
@@ -176,5 +219,13 @@ defmodule XrayWeb.ViewSourceLive do
       true ->
         content
     end
+  end
+
+  defp assign_released_at(
+         %{assigns: %{registry: registry, package: package, version: version}} = socket
+       ) do
+    version_record = Packages.get_version(registry, package, version)
+    released_at = if is_nil(version_record), do: nil, else: version_record.released_at
+    assign(socket, released_at: Util.beautify_datetime(released_at))
   end
 end

@@ -12,7 +12,9 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      borderRadius: ["focus"],
+    },
   },
   plugins: [],
 };
