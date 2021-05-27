@@ -5,7 +5,7 @@ defmodule XrayWeb.SelectSourceLive do
   alias Xray.{Util, VersionListFetcher}
   alias XrayWeb.Endpoint
   alias XrayWeb.Router.Helpers
-  alias XrayWeb.Components.{MainPage, PackageSearchField, VersionSelect}
+  alias XrayWeb.Components.{LoadingSpinner, MainPage, PackageSearchField, VersionSelect}
 
   data registry, :string, default: "npm"
   data package, :string, default: nil
@@ -30,19 +30,24 @@ defmodule XrayWeb.SelectSourceLive do
           package={{ @package }}
           registry={{ @registry }}
         />
-        <VersionSelect
+        <div
           :if={{ not is_nil(@package) }}
-          version={{ @version }}
-          versions={{ @versions }}
-          loading={{ @loading_versions }}
-          select_version="select_version"
-        />
+          class="mt-4"
+        >
+          <LoadingSpinner :if={{ @loading_versions }} />
+          <VersionSelect
+            :if={{ not @loading_versions and not Enum.empty?(@versions) }}
+            selected_version={{ @version }}
+            versions={{ @versions }}
+            select_version="select_version"
+          />
+        </div>
         <LiveRedirect
-          :if={{ not is_nil(@package) and not is_nil(@version) }}
+          :if={{ not is_nil(@version) }}
           to={{ source_url }}
           class="button mt-4"
         >
-          <button>View source</button>
+          View source
         </LiveRedirect>
       </div>
     </MainPage>
@@ -53,7 +58,11 @@ defmodule XrayWeb.SelectSourceLive do
   Handle the selected package from the PackageSearchField
   """
   @impl true
-  def handle_info({:select_package, package}, %{assigns: %{registry: registry}} = socket) do
+  def handle_info(
+        {:select_package, package},
+        %{assigns: %{package: current_package, registry: registry}} = socket
+      ) do
+    VersionListFetcher.unsubscribe(registry, current_package)
     VersionListFetcher.subscribe(registry, package)
     Task.start_link(fn -> VersionListFetcher.get_versions(registry, package) end)
 

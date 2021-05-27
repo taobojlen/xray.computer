@@ -120,7 +120,7 @@ defmodule XrayWeb.ViewSourceLive do
 
   @impl true
   def handle_info(
-        {Source, :not_found, _content},
+        {Source, _version, :not_found, _content},
         %{assigns: %{registry: registry, package: package, version: version}} = socket
       ) do
     Source.unsubscribe(registry, package, version)
@@ -129,7 +129,7 @@ defmodule XrayWeb.ViewSourceLive do
 
   @impl true
   def handle_info(
-        {Source, :error, error},
+        {Source, _version, :error, error},
         %{assigns: %{registry: registry, package: package, version: version}} = socket
       ) do
     Source.unsubscribe(registry, package, version)
@@ -137,13 +137,13 @@ defmodule XrayWeb.ViewSourceLive do
   end
 
   @impl true
-  def handle_info({Source, :progress, progress}, socket) do
+  def handle_info({Source, _version, :progress, progress}, socket) do
     {:noreply, assign(socket, progress: progress)}
   end
 
   @impl true
   def handle_info(
-        {Source, :found_source, files_list_key},
+        {Source, _version, :found_source, version_id},
         %{
           assigns: %{
             current_file: filename,
@@ -154,6 +154,8 @@ defmodule XrayWeb.ViewSourceLive do
           }
         } = socket
       ) do
+    files_list_key = Packages.get_version!(version_id).source_key
+
     files =
       Storage.get(files_list_key)
       |> Jason.decode!()

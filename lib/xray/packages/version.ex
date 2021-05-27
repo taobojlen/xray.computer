@@ -6,6 +6,7 @@ defmodule Xray.Packages.Version do
     field :released_at, :utc_datetime
     field :version, :string
     field :source_key, :string
+    field :tarball_key, :string
     field :tarball_url, :string
     belongs_to :package, Xray.Packages.Package
 
@@ -15,7 +16,7 @@ defmodule Xray.Packages.Version do
   @doc false
   def changeset(version, attrs) do
     version
-    |> cast(attrs, [:version, :released_at, :source_key, :tarball_url])
+    |> cast(attrs, [:version, :released_at, :source_key, :tarball_key, :tarball_url])
     |> validate_required([:version])
   end
 end

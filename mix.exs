@@ -66,8 +66,10 @@ defmodule Xray.MixProject do
       {:cachex, "~> 3.3"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.1"},
+      {:sweet_xml, "~> 0.6.6"},
       {:honeybadger, "~> 0.16.0"},
-      {:surface, "~> 0.4.0"}
+      {:surface, "~> 0.4.0"},
+      {:git_diff, "~> 0.6.3"}
     ]
   end
 

@@ -77,6 +77,7 @@ defmodule Xray.Registry do
     @callback get_packages!(registry) :: [package]
     @callback get_package(registry, package) :: {:ok, Package.t()} | {:error, String.t()}
     @callback get_versions(registry, package) :: {:ok, [Version.t()]} | {:error, String.t()}
-    @callback get_source(registry, package, version) :: {:ok, String.t()} | {:error, String.t()}
+    @callback get_source(registry, package, version) ::
+                {:ok, String.t(), String.t()} | {:error, String.t()}
   end
 end

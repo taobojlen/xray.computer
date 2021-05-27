@@ -52,15 +52,16 @@ a {
 }
 
 .code-container {
-  @apply rounded max-w-full overflow-x-auto;
-  background-color: #3c526d;
+  @apply rounded w-full overflow-x-auto mx-auto;
 }
 
 .code-block {
-  @apply text-sm p-0 overflow-x-auto;
-  margin: 0 !important;
+  @apply text-sm p-0 overflow-x-auto rounded;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   max-width: 70rem;
-  width: 100vw;
 }
 
 .loading-spinner {
@@ -134,4 +135,29 @@ a {
 .prism-line:target,
 .prism-line.selected-line {
   @apply bg-blue-900;
+}
+
+.diff-line {
+  @apply text-sm font-mono whitespace-nowrap;
+}
+.diff-line.line-header {
+  @apply text-gray-400 select-none;
+}
+.diff-line.line-add {
+  @apply bg-green-900;
+}
+.diff-line.line-remove {
+  @apply bg-red-900;
+}
+.diff-line > .line-number {
+  @apply px-2 select-none min-w-max;
+}
+.diff-line > .line-type {
+  @apply pl-1 pr-2 select-none text-gray-300;
+}
+.diff-line.line-add > .line-number {
+  background-color: #043729;
+}
+.diff-line.line-remove > .line-number {
+  background-color: #591414;
 }

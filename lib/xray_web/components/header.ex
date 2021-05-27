@@ -14,7 +14,7 @@ defmodule XrayWeb.Components.Header do
       <LiveRedirect to="/" class="no-underline mb-3">
         <h1 class="text-2xl font-bold">xray.computer</h1>
       </LiveRedirect>
-      <nav role="navigation" class="flex items-center mb-10 space-x-4 hidden">
+      <nav role="navigation" class="flex items-center mb-10 space-x-4">
         <LiveRedirect to="/diff" class={{ "link-button", active: diff_active }}>Diff</LiveRedirect>
         <LiveRedirect to="/source" class={{ "link-button", active: source_active }}>Source</LiveRedirect>
       </nav>

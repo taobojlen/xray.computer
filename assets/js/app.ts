@@ -6,6 +6,7 @@ import NProgress from "nprogress";
 import { LiveSocket } from "phoenix_live_view";
 
 import Prism from "prismjs";
+import "alpinejs";
 
 Prism.hooks.add("lines-register", (env) => {
   let counter = 0;

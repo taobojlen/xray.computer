@@ -6,7 +6,7 @@ config :xray,
   httpoison: MockHTTPoison
 
 config :xray, :bucket,
-  implementation: Xray.Storage.Local,
+  implementation: Xray.Storage.MockS3,
   name: "xray"
 
 # Configure your database

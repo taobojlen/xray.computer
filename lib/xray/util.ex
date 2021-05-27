@@ -12,13 +12,27 @@ defmodule Xray.Util do
   end
 
   @doc """
-  Returns a map containing all files and their contents from the compressed tar archive.
+  Given a path to a .tgz on the filesystem, extracts it to
+  `destination_folder`.
   """
-  def extract_tar_from_binary(binary) do
-    with {:ok, files} <- :erl_tar.extract({:binary, binary}, [:memory, :compressed]) do
+  @spec extract_tgz(String.t(), String.t()) :: :ok | {:error, any}
+  def extract_tgz(tarball_path, destination_folder) do
+    with {:ok, compressed_content} <- File.read(tarball_path),
+         content <- :zlib.gunzip(compressed_content),
+         {:ok, files} <- :erl_tar.extract({:binary, content}, [:memory, :compressed]) do
       files
       |> Enum.map(fn {filename, content} -> {to_string(filename), content} end)
       |> Map.new()
+      |> Enum.each(fn {file, content} ->
+        file = String.replace(file, ~r"^package\/", "")
+        file = Path.join([destination_folder, file])
+
+        file |> Path.dirname() |> File.mkdir_p!()
+
+        File.write!(file, content)
+      end)
+    else
+      {:error, error} -> {:error, error}
     end
   end
 
@@ -42,7 +56,10 @@ defmodule Xray.Util do
     "#{year}-#{month}-#{day}"
   end
 
-  defp compare_versions(first, second) do
+  @doc """
+  Sorter for SemVer-compliant strings.
+  """
+  def compare_versions(first, second) do
     with {:ok, first} <- Version.parse(first), {:ok, second} <- Version.parse(second) do
       Version.compare(first, second) == :gt
     else
