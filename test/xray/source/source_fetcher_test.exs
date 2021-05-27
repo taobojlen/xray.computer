@@ -12,12 +12,25 @@ defmodule Xray.Source.SourceFetcherTest do
       # our test data to a temporary location first
       source = Path.absname("test/data/package")
       destination = Path.join(System.tmp_dir!(), "package")
+      tarball_path = Path.join(System.tmp_dir!(), "tarball")
       File.cp_r!(source, destination)
 
       Xray.MockRegistry
       |> expect(:get_source, fn _registry, _package, _version ->
-        {:ok, destination}
+        {:ok, destination, tarball_path}
       end)
+
+      Xray.Storage.MockS3
+      |> expect(:put_from_filesystem, fn _a, _b ->
+        nil
+      end)
+      |> expect(
+        :put,
+        4,
+        fn _a, _b ->
+          nil
+        end
+      )
 
       package = insert(:package)
       version = insert(:version, package: package)

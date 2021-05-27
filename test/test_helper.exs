@@ -9,3 +9,5 @@ Mox.defmock(Xray.Api.MockNpm,
 )
 
 Mox.defmock(MockHTTPoison, for: HTTPoison.Base)
+
+Mox.defmock(Xray.Storage.MockS3, for: Xray.Storage.Repo)

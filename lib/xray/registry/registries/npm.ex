@@ -74,23 +74,9 @@ defmodule Xray.Registry.Npm do
 
       folder_path = Util.tmp_path("package")
       File.mkdir!(folder_path)
+      Util.extract_tgz(tarball_path, folder_path)
 
-      tarball_path
-      |> File.read!()
-      |> :zlib.gunzip()
-      |> Xray.Util.extract_tar_from_binary()
-      |> Enum.each(fn {file, content} ->
-        file = String.replace(file, ~r"^package\/", "")
-        file = Path.join([folder_path, file])
-
-        file |> Path.dirname() |> File.mkdir_p!()
-
-        File.write!(file, content)
-      end)
-
-      File.rm!(tarball_path)
-
-      {:ok, folder_path}
+      {:ok, folder_path, tarball_path}
     end
   end
 
@@ -125,7 +111,7 @@ defmodule Xray.Registry.Npm do
             }
           end
         end)
-        |> Enum.reverse()
+        |> Enum.sort_by(&Map.get(&1, :version), &Util.compare_versions/2)
 
       _ ->
         []

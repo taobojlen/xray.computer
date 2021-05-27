@@ -9,6 +9,8 @@ defmodule Xray.Storage do
     @callback get(key) :: binary() | nil
     @callback list(prefix) :: [key]
     @callback put(key, binary()) :: term()
+    @callback put_from_filesystem(key, String.t()) :: term()
+    @callback get_to_filesystem(key, String.t()) :: term()
   end
 
   @spec get(key) :: binary() | nil
@@ -27,6 +29,18 @@ defmodule Xray.Storage do
   def put(key, content) do
     repo = impl()
     repo.put(key, content)
+  end
+
+  @spec put_from_filesystem(key, String.t()) :: term()
+  def put_from_filesystem(key, path) do
+    repo = impl()
+    repo.put_from_filesystem(key, path)
+  end
+
+  @spec get_to_filesystem(key, String.t()) :: term()
+  def get_to_filesystem(key, path) do
+    repo = impl()
+    repo.get_to_filesystem(key, path)
   end
 
   defp impl do

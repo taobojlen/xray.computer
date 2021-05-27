@@ -26,7 +26,7 @@ defmodule Xray.Registry.Behaviour do
 
   @doc """
   Download the source code for a given package and version.
-  Returns the (temporary) path at which it was saved.
+  Returns the (temporary) path at which it was saved, and the path of a compressed tarball.
   """
-  @callback get_source(package, version) :: {:ok, String.t()} | {:error, String.t()}
+  @callback get_source(package, version) :: {:ok, String.t(), String.t()} | {:error, String.t()}
 end
