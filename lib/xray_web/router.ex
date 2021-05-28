@@ -16,7 +16,8 @@ defmodule XrayWeb.Router do
 
     get("/", BaseController, :show)
     live("/about", AboutLive, :index)
-    live("/diff", DiffLive, :index)
+    live("/diff", SelectDiffLive, :index)
+    live("/diff/:registry/:package/:version_from/:version_to", ViewDiffLive, :index)
     live("/source", SelectSourceLive, :index)
     live("/source/:registry/:package/:version", ViewSourceLive, :index)
     live("/source/:registry/:package/:version/:filename", ViewSourceLive, :index)

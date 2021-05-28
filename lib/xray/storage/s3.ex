@@ -18,4 +18,19 @@ defmodule Xray.Storage.S3 do
   def put(key, content) do
     S3.put_object(@bucket, key, content) |> ExAws.request!()
   end
+
+  @impl true
+  def put_from_filesystem(key, path) do
+    path
+    |> S3.Upload.stream_file()
+    |> S3.upload(@bucket, key)
+    |> ExAws.request!()
+  end
+
+  @impl true
+  def get_to_filesystem(key, path) do
+    @bucket
+    |> S3.download_file(key, path)
+    |> ExAws.request!()
+  end
 end

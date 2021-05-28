@@ -9,7 +9,7 @@ defmodule XrayWeb.Components.FormLabel do
     ~H"""
     <label
       for="{{ @for }}"
-      class="text-sm text-gray-600"
+      class="text-sm text-gray-700"
     >
       <slot />
     </label>

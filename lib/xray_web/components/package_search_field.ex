@@ -17,10 +17,10 @@ defmodule XrayWeb.Components.PackageSearchField do
 
     ~H"""
     <form :on-change="type">
-      <FormLabel for="package">Package</FormLabel>
+      <span class="sr-only"><FormLabel for="package-input">Package</FormLabel></span>
       <input
         value={{ @package }}
-        id="package"
+        id="package-input"
         type="text"
         name="package"
         placeholder="Search for a package"
@@ -30,7 +30,7 @@ defmodule XrayWeb.Components.PackageSearchField do
         class="block p-2 mb-4 w-72 rounded shadow border border-gray-300"
       />
       <div :if={{ not Enum.empty?(@suggestions) }} class="w-72">
-        <p class="text-sm">{{ suggestion_text }}</p>
+        <p class="text-sm text-gray-700">{{ suggestion_text }}</p>
         <button
           :for={{ suggestion <- @suggestions }}
           :on-click="select_suggestion"

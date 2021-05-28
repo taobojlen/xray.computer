@@ -3,8 +3,8 @@ defmodule Xray.UtilTest do
 
   alias Xray.Util
 
-  describe "util" do
-    test "sort_versions/1 sorts a list of versions" do
+  describe "sort_versions/1" do
+    test "sorts a list of versions" do
       versions = [
         "1.0.0-rc.1",
         "4.9.0",
@@ -22,7 +22,7 @@ defmodule Xray.UtilTest do
       assert Util.sort_versions(versions) == expected
     end
 
-    test "sort_versions/1 handles non-SemVer strings" do
+    test "handles non-SemVer strings" do
       versions = [
         "1.0.0",
         "abc",

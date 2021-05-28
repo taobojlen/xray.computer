@@ -36,14 +36,14 @@ defmodule Xray.Source do
     Phoenix.PubSub.unsubscribe(Xray.PubSub, get_topic(registry, package, version))
   end
 
-  @spec notify_found_source(registry, package, version, String.t()) :: :ok | {:error, term}
-  def notify_found_source(registry, package, version, files_list_key) do
+  @spec notify_found_source(registry, package, version, Integer.t()) :: :ok | {:error, term}
+  def notify_found_source(registry, package, version, version_id) do
     notify_subscribers(
       registry,
       package,
       version,
       :found_source,
-      files_list_key
+      version_id
     )
   end
 
@@ -98,7 +98,7 @@ defmodule Xray.Source do
               |> SourceFetcher.new()
               |> Oban.insert()
             else
-              notify_found_source(registry, package_name, version_name, version.source_key)
+              notify_found_source(registry, package_name, version_name, version.id)
             end
 
           {:error, _error} ->
@@ -144,7 +144,7 @@ defmodule Xray.Source do
     Phoenix.PubSub.broadcast(
       Xray.PubSub,
       get_topic(registry, package, version),
-      {__MODULE__, event, content}
+      {__MODULE__, version, event, content}
     )
   end
 
