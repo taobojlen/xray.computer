@@ -1,7 +1,6 @@
 defmodule XrayWeb.Router do
   use XrayWeb, :router
   use Honeybadger.Plug
-  import Plug.BasicAuth
   import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
@@ -15,7 +14,11 @@ defmodule XrayWeb.Router do
 
   pipeline :admin do
     plug :browser
-    plug(:basic_auth, Application.get_env(:xray, :basic_auth))
+    plug :auth
+
+    defp auth(conn, _opts) do
+      Plug.BasicAuth.basic_auth(conn, Application.get_env(:xray, :basic_auth))
+    end
   end
 
   scope "/", XrayWeb do

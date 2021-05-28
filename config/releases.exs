@@ -19,9 +19,11 @@ admin_password =
     environment variable ADMIN_PASSWORD is missing.
     """
 
-config :xray, :basic_auth,
-  username: "admin",
-  password: admin_password
+config :xray,
+  basic_auth: [
+    username: "admin",
+    password: admin_password
+  ]
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
