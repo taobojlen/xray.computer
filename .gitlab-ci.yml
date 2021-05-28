@@ -40,6 +40,8 @@ test:
 lint:
   stage: test
   extends: ".elixir"
+  variables:
+    MIX_ENV: "test"
   script:
     - mix local.hex --force
     - mix local.rebar --force
