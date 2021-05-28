@@ -25,7 +25,7 @@ defmodule Xray.MixProject do
   def application do
     [
       mod: {Xray.Application, []},
-      extra_applications: [:honeybadger, :logger, :runtime_tools, :iex]
+      extra_applications: [:honeybadger, :logger, :runtime_tools, :iex, :os_mon]
     ]
   end
 
@@ -69,7 +69,8 @@ defmodule Xray.MixProject do
       {:sweet_xml, "~> 0.6.6"},
       {:honeybadger, "~> 0.16.0"},
       {:surface, "~> 0.4.0"},
-      {:git_diff, "~> 0.6.3"}
+      {:git_diff, "~> 0.6.3"},
+      {:ecto_psql_extras, "~> 0.6.5"}
     ]
   end
 

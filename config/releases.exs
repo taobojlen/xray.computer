@@ -13,6 +13,16 @@ config :xray, Xray.Repo,
   url: database_url,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
+admin_password =
+  System.get_env("ADMIN_PASSWORD") ||
+    raise """
+    environment variable ADMIN_PASSWORD is missing.
+    """
+
+config :xray, :basic_auth,
+  username: "admin",
+  password: admin_password
+
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
     raise """

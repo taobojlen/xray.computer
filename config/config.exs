@@ -14,6 +14,13 @@ config :xray,
   npm_api: Xray.Api.Npm,
   httpoison: HTTPoison
 
+config :xray, env: Mix.env()
+
+config :xray, :basic_auth,
+  username: "admin",
+  # overridden in releases.exs
+  password: "admin"
+
 config :xray, :bucket,
   implementation: Xray.Storage.S3,
   name: "xray"
