@@ -46,6 +46,7 @@ USER nobody:nobody
 
 COPY CHECKS ./
 COPY Procfile ./
+COPY app.json ./
 COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/xray ./
 
 ENV HOME=/app
