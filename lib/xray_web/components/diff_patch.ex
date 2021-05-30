@@ -9,6 +9,7 @@ defmodule XrayWeb.Components.DiffPatch do
   @impl true
   def render(%{patch: patch} = assigns) do
     lines = patch_to_lines(patch)
+    {change_type, filename, filename_after} = change_type(patch)
 
     ~H"""
     <div x-data="{ open: true }" class="bg-code-bg text-code-text rounded border border-gray-400">
@@ -16,7 +17,19 @@ defmodule XrayWeb.Components.DiffPatch do
         @click="open = !open"
         class="py-2 px-4 bg-gray-800 font-mono cursor-pointer flex items-center justify-between border-b border-gray-500 sticky top-0"
       >
-        <span>{{ @patch.from }}</span>
+        <div>
+          <span
+            :if={{ change_type != :changed }}
+            class="border border-gray-400 bg-gray-500 text-gray-200 rounded p-1 text-xs font-sans uppercase mr-2"
+          >
+            {{ change_type }}
+          </span>
+          <span>{{ filename }}</span>
+          <span :if={{ not is_nil(filename_after) }}>
+            <i class="fas fa-long-arrow-alt-right" />
+            {{ filename_after }}
+          </span>
+        </div>
         <div class="text-gray-400">
           <#Raw><template x-if="open"></#Raw><i class="fas fa-angle-up" /><#Raw></template></#Raw>
           <#Raw><template x-if="!open"></#Raw><i class="fas fa-angle-down" /><#Raw></template></#Raw>
@@ -39,6 +52,15 @@ defmodule XrayWeb.Components.DiffPatch do
       </div>
     </div>
     """
+  end
+
+  defp change_type(%GitDiff.Patch{from: from, to: to}) do
+    case {from, to} do
+      {nil, to} -> {:created, to, nil}
+      {from, nil} -> {:deleted, from, nil}
+      {from, to} when from == to -> {:changed, to, nil}
+      {from, to} -> {:renamed, from, to}
+    end
   end
 
   defp patch_to_lines(%GitDiff.Patch{chunks: chunks}) do

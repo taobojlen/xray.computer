@@ -1,6 +1,9 @@
 defmodule XrayWeb.ViewDiffLive do
   use Surface.LiveView
+  alias Surface.Components.LiveRedirect
   alias XrayWeb.Components.{DiffPatch, MainPage, SourceLoadingBar}
+  alias XrayWeb.Endpoint
+  alias XrayWeb.Router.Helpers
 
   alias Xray.Diff
   alias Xray.Diff.DiffServer
@@ -40,7 +43,7 @@ defmodule XrayWeb.ViewDiffLive do
       |> assign(package: package)
       |> assign(version_from: version_from)
       |> assign(version_to: version_to)
-      |> assign(page_title: "#{package} #{version_from} to #{version_to} diff")
+      |> assign(page_title: "#{package} #{version_from} to #{version_to}")
 
     {:ok, socket}
   end
@@ -53,16 +56,28 @@ defmodule XrayWeb.ViewDiffLive do
       title={{ @page_title }}
       wide={{ true }}
     >
-      <div :if={{ @loading }} class="mt-10">
-        <SourceLoadingBar
-          registry={{ @registry }}
-          progress={{ @progress }}
-          status_text={{ @loading_status }}
-        />
-      </div>
-      <div :if={{ not @loading }} class="space-y-4 w-full">
-        <DiffPatch :for={{ patch <- @diff }} patch={{ patch }} />
-      </div>
+      <template slot="custom_title">
+        {{ @package }}
+        <LiveRedirect to={{ Helpers.view_source_path(Endpoint, :index, @registry, @package, @version_from) }}>
+          {{ @version_from }}
+        </LiveRedirect>
+        <i class="fas fa-long-arrow-alt-right mx-1" />
+        <LiveRedirect to={{ Helpers.view_source_path(Endpoint, :index, @registry, @package, @version_to) }}>
+          {{ @version_to }}
+        </LiveRedirect>
+      </template>
+      <template>
+        <div :if={{ @loading }} class="mt-10">
+          <SourceLoadingBar
+            registry={{ @registry }}
+            progress={{ @progress }}
+            status_text={{ @loading_status }}
+          />
+        </div>
+        <div :if={{ not @loading }} class="space-y-4 w-full">
+          <DiffPatch :for={{ patch <- @diff }} patch={{ patch }} />
+        </div>
+      </template>
     </MainPage>
     """
   end

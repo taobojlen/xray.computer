@@ -89,23 +89,17 @@ defmodule Xray.Source do
 
   @spec get_package_and_version(registry, package, version) :: any()
   defp get_package_and_version(registry, package_name, version_name) do
-    case get_package(registry, package_name) do
-      {:ok, package} ->
-        case get_version(registry, package, version_name) do
-          {:ok, version} ->
-            if is_nil(version.source_key) do
-              %{id: version.id}
-              |> SourceFetcher.new()
-              |> Oban.insert()
-            else
-              notify_found_source(registry, package_name, version_name, version.id)
-            end
-
-          {:error, _error} ->
-            notify_subscribers(registry, package_name, version_name, :not_found, nil)
-        end
-
-      {:error, _err} ->
+    with {:ok, package} <- get_package(registry, package_name),
+         {:ok, version} <- get_version(registry, package, version_name) do
+      if is_nil(version.source_key) do
+        %{id: version.id}
+        |> SourceFetcher.new()
+        |> Oban.insert()
+      else
+        notify_found_source(registry, package_name, version_name, version.id)
+      end
+    else
+      {:error, _error} ->
         notify_subscribers(registry, package_name, version_name, :not_found, nil)
     end
   end
@@ -114,10 +108,10 @@ defmodule Xray.Source do
   defp get_package(registry, package) do
     case Repo.get_by(Package, name: package, registry: registry) do
       nil ->
-        case @registry.get_package(registry, package) do
-          {:ok, changeset} ->
-            {:ok, Repo.insert!(changeset)}
-
+        with {:ok, changeset} <- @registry.get_package(registry, package),
+             {:ok, struct} <- Repo.insert(changeset) do
+          {:ok, struct}
+        else
           {:error, error} ->
             {:error, error}
         end

@@ -27,16 +27,20 @@ a {
 }
 
 .suggestion-button {
-  @apply bg-gray-200 text-gray-600 rounded text-sm float-left m-1 p-1 cursor-pointer hover:bg-gray-300 hover:text-gray-700 text-left truncate;
+  @apply bg-gray-300 text-gray-800 rounded text-sm float-left m-1 p-1 cursor-pointer hover:bg-gray-400 hover:text-gray-900 text-left truncate;
   max-width: 18rem;
 }
 
 .link-button {
-  @apply text-gray-800 p-2 hover:bg-blue-100 rounded-lg no-underline;
+  @apply text-gray-800 p-1 no-underline;
 }
-
+.link-button:hover,
 .link-button.active {
-  @apply font-bold drop-shadow underline;
+  @apply underline;
+  text-decoration-thickness: 0.2rem;
+}
+.link-button.active {
+  @apply font-bold;
 }
 
 .button {
@@ -143,21 +147,22 @@ a {
 .diff-line.line-header {
   @apply text-gray-400 select-none;
 }
-.diff-line.line-add {
-  @apply bg-green-900;
-}
-.diff-line.line-remove {
-  @apply bg-red-900;
-}
 .diff-line > .line-number {
   @apply px-2 select-none min-w-max;
 }
 .diff-line > .line-type {
   @apply pl-1 pr-2 select-none text-gray-300;
 }
+
+.diff-line.line-add {
+  @apply bg-green-800 bg-opacity-50;
+}
+.diff-line.line-remove {
+  @apply bg-red-800 bg-opacity-50;
+}
 .diff-line.line-add > .line-number {
-  background-color: #043729;
+  @apply bg-opacity-10;
 }
 .diff-line.line-remove > .line-number {
-  background-color: #591414;
+  @apply bg-opacity-10;
 }
