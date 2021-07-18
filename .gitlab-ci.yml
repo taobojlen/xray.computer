@@ -57,7 +57,7 @@ deploy_production:
   environment:
     name: production
   variables:
-    GIT_REMOTE_URL: ssh://dokku@116.203.28.236:22/xray
+    GIT_REMOTE_URL: ssh://dokku@xray.computer:22/xray
     GIT_PUSH_FLAGS: "--force"
     BRANCH: main
     GIT_DEPTH: 0
