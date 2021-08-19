@@ -17,6 +17,8 @@ defmodule Xray.Registry.PackageListFetcher do
     if @mix_env == :prod do
       HTTPoison.get("https://api.honeybadger.io/v1/check_in/j6IALq")
     end
+
+    :ok
   end
 
   defp insert_packages(names, registry) do

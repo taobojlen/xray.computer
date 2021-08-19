@@ -13,7 +13,7 @@ config :xray,
   registry: Xray.Registry,
   npm_api: Xray.Api.Npm,
   httpoison: HTTPoison,
-  mix_env: Mix.env
+  mix_env: Mix.env()
 
 config :xray, env: Mix.env()
 
