@@ -12,7 +12,8 @@ config :xray,
   tmp_dir: "/tmp/xray",
   registry: Xray.Registry,
   npm_api: Xray.Api.Npm,
-  httpoison: HTTPoison
+  httpoison: HTTPoison,
+  mix_env: Mix.env
 
 config :xray, env: Mix.env()
 

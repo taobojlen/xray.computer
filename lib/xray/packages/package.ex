@@ -21,6 +21,7 @@ defmodule Xray.Packages.Package do
     |> cast(attrs, [:name, :registry, :versions_updated_at])
     |> validate_required([:name, :registry])
     |> validate_inclusion(:registry, @registries)
+    |> unique_constraint([:registry, :name])
   end
 
   def get_registries do

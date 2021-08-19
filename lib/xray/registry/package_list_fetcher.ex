@@ -4,6 +4,7 @@ defmodule Xray.Registry.PackageListFetcher do
   alias Xray.Repo
 
   @registry Application.compile_env!(:xray, :registry)
+  @mix_env Application.compile_env!(:xray, :mix_env)
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"registry" => registry}}) do
@@ -12,6 +13,10 @@ defmodule Xray.Registry.PackageListFetcher do
     packages
     |> Enum.chunk_every(1000)
     |> Enum.each(fn chunk -> insert_packages(chunk, registry) end)
+
+    if @mix_env == :prod do
+      HTTPoison.get("https://api.honeybadger.io/v1/check_in/j6IALq")
+    end
   end
 
   defp insert_packages(names, registry) do
