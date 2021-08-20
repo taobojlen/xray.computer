@@ -31,8 +31,8 @@ defmodule XrayWeb.Components.DiffPatch do
           </span>
         </div>
         <div class="text-gray-400">
-          <#Raw><template x-if="open"></#Raw><i class="fas fa-angle-up" /><#Raw></template></#Raw>
-          <#Raw><template x-if="!open"></#Raw><i class="fas fa-angle-down" /><#Raw></template></#Raw>
+          <template x-if="open"><i class="fas fa-angle-up" /></template>
+          <template x-if="!open"><i class="fas fa-angle-down" /></template>
         </div>
       </div>
       <div
