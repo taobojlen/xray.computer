@@ -55,7 +55,7 @@ defmodule XrayWeb.Components.PackageSearchField do
     notify_parent_liveview(package)
 
     suggestions =
-      if package == nil, do: @default_suggestions, else: get_suggestions(registry, package)
+      if package == nil or package == "", do: @default_suggestions, else: get_suggestions(registry, package)
 
     {:noreply,
      assign(socket,
