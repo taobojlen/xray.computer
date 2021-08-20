@@ -1,24 +1,10 @@
 # X-Ray
 
-## To do
-- [x] Download full list of packages daily & use that for search
-  - Stream download from npm since it's a large JSON file
-- [x] Cache responses from registry
-- [x] Add S3 storage
-- [x] Make version loading async
-- [x] Add suggested packages
-- [x] Keep file selector at top of screen
-- [x] Include more detail in source loading state (progress bar?)
-- [x] Put cursor in search field immediately when viewing page
-- [ ] Write more tests
-- [ ] Implement diff
-- [ ] Add cronjob to clear tmp regularly
-- [ ] Maybe: support for going directly to dependency diff from lockfile diff
-
 # Configuration
 
 Xray expects the following environment variables:
 
+- `SECRET_KEY_BASE` for Phoenix (generate with `mix phx.gen.secret`)
 - `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` if using S3 for file storage
 - `HONEYBADGER_API_KEY` if using Honeybadger for error tracking
 
@@ -28,7 +14,7 @@ To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
+  * Install Node.js dependencies with `npm --prefix assets install`
   * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.

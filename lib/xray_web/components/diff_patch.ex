@@ -1,6 +1,5 @@
 defmodule XrayWeb.Components.DiffPatch do
   use Surface.Component
-  alias Surface.Components.Raw
 
   # https://hexdocs.pm/git_diff/GitDiff.Patch.html
 
