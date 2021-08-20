@@ -7,6 +7,7 @@ import { LiveSocket } from "phoenix_live_view";
 
 import Prism from "prismjs";
 import Alpine from 'alpinejs'
+import "focus-visible";
 
 (window as any).Alpine = Alpine
 

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.2.3",
+    "focus-visible": "^5.2.0",
     "html-entities": "^2.3.2",
     "nprogress": "^0.2.0",
     "phoenix": "file:../deps/phoenix",
@@ -30,6 +31,7 @@
     "css-minimizer-webpack-plugin": "^3.0.2",
     "mini-css-extract-plugin": "^2.2.0",
     "postcss": "^8.3.6",
+    "postcss-focus-visible": "^5.0.0",
     "postcss-import": "^14.0.2",
     "postcss-loader": "^6.1.1",
     "tailwindcss": "^2.2.7",

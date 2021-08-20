@@ -24,7 +24,9 @@ module.exports = {
   },
   variants: {
     extend: {
-      borderRadius: ["focus"],
+      borderRadius: ["focus-visible"],
+      ringColor: ["focus-visible"],
+      ringWidth: ["focus-visible"],
     },
   },
   plugins: [],
