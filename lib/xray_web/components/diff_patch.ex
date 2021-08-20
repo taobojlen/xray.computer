@@ -11,7 +11,7 @@ defmodule XrayWeb.Components.DiffPatch do
     lines = patch_to_lines(patch)
     {change_type, filename, filename_after} = change_type(patch)
 
-    ~H"""
+    ~F"""
     <div x-data="{ open: true }" class="bg-code-bg text-code-text rounded border border-gray-400">
       <div
         @click="open = !open"
@@ -19,15 +19,15 @@ defmodule XrayWeb.Components.DiffPatch do
       >
         <div>
           <span
-            :if={{ change_type != :changed }}
+            :if={change_type != :changed}
             class="border border-gray-400 bg-gray-500 text-gray-200 rounded p-1 text-xs font-sans uppercase mr-2"
           >
-            {{ change_type }}
+            {change_type}
           </span>
-          <span>{{ filename }}</span>
-          <span :if={{ not is_nil(filename_after) }}>
+          <span>{filename}</span>
+          <span :if={not is_nil(filename_after)}>
             <i class="fas fa-long-arrow-alt-right" />
-            {{ filename_after }}
+            {filename_after}
           </span>
         </div>
         <div class="text-gray-400">
@@ -41,11 +41,11 @@ defmodule XrayWeb.Components.DiffPatch do
       >
         <table>
           <tbody>
-            <tr :for={{ line <- lines }} class={{ "diff-line", line.class }}>
-              <td class="line-number">{{ line.from_line_number }}</td>
-              <td class="line-number">{{ line.to_line_number }}</td>
-              <td class="line-type">{{ line.type }}</td>
-              <td class={{ "w-full", "text-white": not is_nil(line.type) }}><pre>{{ line.text }}</pre></td>
+            <tr :for={line <- lines} class={"diff-line", line.class}>
+              <td class="line-number">{line.from_line_number}</td>
+              <td class="line-number">{line.to_line_number}</td>
+              <td class="line-type">{line.type}</td>
+              <td class={"w-full", "text-white": not is_nil(line.type)}><pre>{line.text}</pre></td>
             </tr>
           </tbody>
         </table>

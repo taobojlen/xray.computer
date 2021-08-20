@@ -8,8 +8,8 @@ defmodule XrayWeb.Components.Select do
   def render(%{options: options} = assigns) do
     yolo = options
 
-    ~H"""
-    <Select form="value" options={{ yolo }} class="select" />
+    ~F"""
+    <Select form="value" options={yolo} class="select" />
     """
   end
 end

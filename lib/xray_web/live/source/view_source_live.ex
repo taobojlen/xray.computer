@@ -61,30 +61,30 @@ defmodule XrayWeb.ViewSourceLive do
   def render(%{released_at: released_at} = assigns) do
     subtitle = if is_nil(released_at), do: nil, else: "Released " <> released_at
 
-    ~H"""
+    ~F"""
     <MainPage
       page="source"
-      title={{ @page_title}}
-      subtitle={{ subtitle }}
-      wide={{ true }}
+      title={@page_title}
+      subtitle={subtitle}
+      wide={true}
     >
-      <div :if={{ @loading }} class="mt-10">
+      <div :if={@loading} class="mt-10">
         <SourceLoadingBar
-          registry={{ @registry }}
-          progress={{ @progress }}
+          registry={@registry}
+          progress={@progress}
         />
       </div>
       <div
-        :if={{ not @loading }}
+        :if={not @loading}
       >
         <FileSelect
-          files={{ Map.keys(@files) }}
-          current_file={{ @current_file }}
+          files={Map.keys(@files)}
+          current_file={@current_file}
           select_file="select_file"
         />
         <SourceCode
-          code={{ @code }}
-          file_type={{ @file_type }}
+          code={@code}
+          file_type={@file_type}
         />
       </div>
     </MainPage>

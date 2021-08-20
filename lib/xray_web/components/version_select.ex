@@ -12,20 +12,20 @@ defmodule XrayWeb.Components.VersionSelect do
   def render(%{label: label} = assigns) do
     select_id = "version-select-#{label}"
 
-    ~H"""
-    <form :on-change={{ @select_version }}>
-      <FormLabel for={{ select_id }}>{{ @label }}</FormLabel>
+    ~F"""
+    <form :on-change={@select_version}>
+      <FormLabel for={select_id}>{@label}</FormLabel>
       <select
         name="version"
-        id={{ select_id }}
+        id={select_id}
         class="select mb-2 w-56"
       >
         <option
-          :for={{version <- @versions}}
-          value={{ version }}
-          selected={{ version == @selected_version }}
+          :for={version <- @versions}
+          value={version}
+          selected={version == @selected_version}
         >
-          {{ version }}
+          {version}
         </option>
       </select>
     </form>

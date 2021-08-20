@@ -6,9 +6,9 @@ defmodule XrayWeb.Components.SourceCode do
 
   @impl true
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="code-container">
-      <pre class="code-block"><code id="code" class="language-{{ @file_type }}" phx-hook="codeUpdated">{{ @code }}</code></pre>
+      <pre class="code-block"><code id="code" class={"language-#{@file_type}"} phx-hook="codeUpdated">{@code}</code></pre>
     </div>
     """
   end

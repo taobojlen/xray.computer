@@ -8,10 +8,10 @@ defmodule XrayWeb.Components.FileSelect do
 
   @impl true
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="flex items-center justify-center w-full sticky top-0 bg-gray-100 pt-2 pb-4 z-10">
       <form
-        :on-change={{ @select_file }}
+        :on-change={@select_file}
       >
         <FormLabel for="file">File</FormLabel>
         <select
@@ -20,11 +20,11 @@ defmodule XrayWeb.Components.FileSelect do
           class="select"
         >
           <option
-            :for={{ filename <- @files }}
-            value={{ filename }}
-            selected={{ filename == @current_file }}
+            :for={filename <- @files}
+            value={filename}
+            selected={filename == @current_file}
           >
-            {{ filename }}
+            {filename}
           </option>
         </select>
       </form>

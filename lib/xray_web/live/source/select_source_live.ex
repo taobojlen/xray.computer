@@ -22,29 +22,29 @@ defmodule XrayWeb.SelectSourceLive do
         nil
       end
 
-    ~H"""
+    ~F"""
     <MainPage title="View source" page="source" description="Read the published source code of any npm package.">
       <div class="flex flex-col items-center">
         <PackageSearchField
           id="package-search"
-          package={{ @package }}
-          registry={{ @registry }}
+          package={@package}
+          registry={@registry}
         />
         <div
-          :if={{ not is_nil(@package) }}
+          :if={not is_nil(@package)}
           class="mt-4"
         >
-          <LoadingSpinner :if={{ @loading_versions }} />
+          <LoadingSpinner :if={@loading_versions} />
           <VersionSelect
-            :if={{ not @loading_versions and not Enum.empty?(@versions) }}
-            selected_version={{ @version }}
-            versions={{ @versions }}
+            :if={not @loading_versions and not Enum.empty?(@versions)}
+            selected_version={@version}
+            versions={@versions}
             select_version="select_version"
           />
         </div>
         <LiveRedirect
-          :if={{ not is_nil(@version) }}
-          to={{ source_url }}
+          :if={not is_nil(@version)}
+          to={source_url}
           class="button mt-4"
         >
           View source

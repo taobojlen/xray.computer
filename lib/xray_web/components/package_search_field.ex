@@ -15,11 +15,11 @@ defmodule XrayWeb.Components.PackageSearchField do
   def render(%{package: package} = assigns) do
     suggestion_text = if package == nil, do: "Suggestions", else: "Did you mean?"
 
-    ~H"""
+    ~F"""
     <form :on-change="type">
       <span class="sr-only"><FormLabel for="package-input">Package</FormLabel></span>
       <input
-        value={{ @package }}
+        value={@package}
         id="package-input"
         type="text"
         name="package"
@@ -29,17 +29,17 @@ defmodule XrayWeb.Components.PackageSearchField do
         phx-debounce="300"
         class="block p-2 mb-4 w-72 rounded shadow border border-gray-300"
       />
-      <div :if={{ not Enum.empty?(@suggestions) }} class="w-72">
-        <p class="text-sm text-gray-700">{{ suggestion_text }}</p>
+      <div :if={not Enum.empty?(@suggestions)} class="w-72">
+        <p class="text-sm text-gray-700">{suggestion_text}</p>
         <button
-          :for={{ suggestion <- @suggestions }}
+          :for={suggestion <- @suggestions}
           :on-click="select_suggestion"
-          phx-value-package={{ suggestion }}
-          title={{ suggestion }}
+          phx-value-package={suggestion}
+          title={suggestion}
           type="button"
           class="suggestion-button"
         >
-          {{ suggestion }}
+          {suggestion}
         </button>
       </div>
     </form>

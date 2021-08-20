@@ -41,47 +41,47 @@ defmodule XrayWeb.SelectDiffLive do
         nil
       end
 
-    ~H"""
+    ~F"""
     <MainPage title="Diff" page="diff" description="See what changed between different versions of an npm package.">
       <div class="flex flex-col items-center">
         <PackageSearchField
           id="package-search"
-          package={{ @package }}
-          registry={{ @registry }}
+          package={@package}
+          registry={@registry}
         />
         <div
-          :if={{ not is_nil(@package) }}
+          :if={not is_nil(@package)}
         >
-          <LoadingSpinner :if={{ @loading_versions }} />
-          <div :if={{ not @loading_versions and not Enum.empty?(@versions_from) }}>
+          <LoadingSpinner :if={@loading_versions} />
+          <div :if={not @loading_versions and not Enum.empty?(@versions_from)}>
             <VersionSelect
-              selected_version={{ @version_from }}
-              versions={{ @versions_from }}
+              selected_version={@version_from}
+              versions={@versions_from}
               select_version="select_version_from"
               label="From"
             />
             <i class="fas fa-arrow-down text-center w-full text-gray-400 mt-4" />
             <VersionSelect
-              selected_version={{ @version_to }}
-              versions={{ @versions_to }}
+              selected_version={@version_to}
+              versions={@versions_to}
               select_version="select_version_to"
               label="To"
             />
           </div>
         </div>
         <LiveRedirect
-          :if={{ not is_nil(@version_from) and not is_nil(@version_to) }}
-          to={{ diff_url }}
+          :if={not is_nil(@version_from) and not is_nil(@version_to)}
+          to={diff_url}
           class="button mt-4"
         >
           View diff
         </LiveRedirect>
 
-        <p :if={{ length(@versions) == 1}} class="mt-4">
-        This package only has one version ({{ hd(@versions) }}).
+        <p :if={length(@versions) == 1} class="mt-4">
+        This package only has one version ({hd(@versions)}).
           <LiveRedirect
-            :if={{ length(@versions) == 1 }}
-            to={{ source_url }}
+            :if={length(@versions) == 1}
+            to={source_url}
           >
             View source
           </LiveRedirect>

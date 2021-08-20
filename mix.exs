@@ -68,7 +68,7 @@ defmodule Xray.MixProject do
       {:ex_aws_s3, "~> 2.1"},
       {:sweet_xml, "~> 0.6.6"},
       {:honeybadger, "~> 0.16.0"},
-      {:surface, "~> 0.4.0"},
+      {:surface, "~> 0.5.0"},
       {:git_diff, "~> 0.6.3"},
       {:ecto_psql_extras, "~> 0.6.5"}
     ]

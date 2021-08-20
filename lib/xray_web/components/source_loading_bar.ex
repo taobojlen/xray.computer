@@ -16,11 +16,11 @@ defmodule XrayWeb.Components.SourceLoadingBar do
         status_text
       end
 
-    ~H"""
+    ~F"""
     <section class="w-56 mx-auto">
-      <div class="mb-1 text-sm">{{ status_text }}</div>
-      <div class="progress-bar-wrapper" role="progressbar" aria-valuenow={{ @progress }} aria-valuemin="0" aria-valuemax="1">
-        <div class="progress-bar" style="width: {{ width }}" />
+      <div class="mb-1 text-sm">{status_text}</div>
+      <div class="progress-bar-wrapper" role="progressbar" aria-valuenow={@progress} aria-valuemin="0" aria-valuemax="1">
+        <div class="progress-bar" style={"width: #{width}"} />
       </div>
     </section>
     """

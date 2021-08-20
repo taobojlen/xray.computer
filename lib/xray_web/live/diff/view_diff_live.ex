@@ -50,34 +50,34 @@ defmodule XrayWeb.ViewDiffLive do
 
   @impl true
   def render(assigns) do
-    ~H"""
+    ~F"""
     <MainPage
       page="diff"
-      title={{ @page_title }}
-      wide={{ true }}
+      title={@page_title}
+      wide={true}
     >
-      <template slot="custom_title">
-        {{ @package }}
-        <LiveRedirect to={{ Helpers.view_source_path(Endpoint, :index, @registry, @package, @version_from) }}>
-          {{ @version_from }}
+      <#template slot="custom_title">
+        {@package}
+        <LiveRedirect to={Helpers.view_source_path(Endpoint, :index, @registry, @package, @version_from)}>
+          {@version_from}
         </LiveRedirect>
         <i class="fas fa-long-arrow-alt-right mx-1" />
-        <LiveRedirect to={{ Helpers.view_source_path(Endpoint, :index, @registry, @package, @version_to) }}>
-          {{ @version_to }}
+        <LiveRedirect to={Helpers.view_source_path(Endpoint, :index, @registry, @package, @version_to)}>
+          {@version_to}
         </LiveRedirect>
-      </template>
-      <template>
-        <div :if={{ @loading }} class="mt-10">
+      </#template>
+      <#template>
+        <div :if={@loading} class="mt-10">
           <SourceLoadingBar
-            registry={{ @registry }}
-            progress={{ @progress }}
-            status_text={{ @loading_status }}
+            registry={@registry}
+            progress={@progress}
+            status_text={@loading_status}
           />
         </div>
-        <div :if={{ not @loading }} class="space-y-4 w-full">
-          <DiffPatch :for={{ patch <- @diff }} patch={{ patch }} />
+        <div :if={not @loading} class="space-y-4 w-full">
+          <DiffPatch :for={patch <- @diff} patch={patch} />
         </div>
-      </template>
+      </#template>
     </MainPage>
     """
   end

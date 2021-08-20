@@ -6,12 +6,12 @@ defmodule XrayWeb.Components.FormLabel do
 
   @impl true
   def render(assigns) do
-    ~H"""
+    ~F"""
     <label
-      for="{{ @for }}"
+      for={"#{@for}"}
       class="text-sm text-gray-700"
     >
-      <slot />
+      <#slot />
     </label>
     """
   end

@@ -4,7 +4,7 @@ defmodule XrayWeb.AboutLive do
 
   @impl true
   def render(assigns) do
-    ~H"""
+    ~F"""
     <MainPage title="About">
       <div class="space-y-3">
         <p>If you do your due diligence when installing or updating dependencies, you've probably
