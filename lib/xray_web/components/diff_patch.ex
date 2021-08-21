@@ -11,7 +11,7 @@ defmodule XrayWeb.Components.DiffPatch do
     {change_type, filename, filename_after} = change_type(patch)
 
     ~F"""
-    <div x-data="{ open: true }" class="bg-code-bg text-code-text rounded border border-gray-400">
+    <div x-data="{ open: true }" class="bg-code-bg text-code-text rounded border border-gray-400" phx-hook="codeUpdated" id={filename}>
       <div
         @click="open = !open"
         class="py-2 px-4 bg-gray-800 font-mono cursor-pointer flex items-center justify-between border-b border-gray-500 sticky top-0"
@@ -40,9 +40,11 @@ defmodule XrayWeb.Components.DiffPatch do
       >
         <table>
           <tbody>
-            <tr :for={line <- lines} class={"diff-line", line.class}>
-              <td class="line-number">{line.from_line_number}</td>
-              <td class="line-number">{line.to_line_number}</td>
+            <tr :for={{line, index} <- Enum.with_index(lines)} class={"diff-line", line.class} id={"#{filename}-#{index}"}>
+              <td class="line-number">
+                <div class="inline-block w-6">{line.from_line_number}</div>
+                <div class="inline-block w-6">{line.to_line_number}</div>
+              </td>
               <td class="line-type">{line.type}</td>
               <td class={"w-full", "text-white": not is_nil(line.type)}><pre>{line.text}</pre></td>
             </tr>

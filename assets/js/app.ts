@@ -6,12 +6,12 @@ import NProgress from "nprogress";
 import { LiveSocket } from "phoenix_live_view";
 
 import Prism from "prismjs";
-import Alpine from 'alpinejs'
+import Alpine from "alpinejs";
 import "focus-visible";
 
-(window as any).Alpine = Alpine
+(window as any).Alpine = Alpine;
 
-Alpine.start()
+Alpine.start();
 
 Prism.hooks.add("lines-register", (env) => {
   let counter = 0;
@@ -24,18 +24,38 @@ Prism.hooks.add("lines-register", (env) => {
   });
 });
 
+// We add line numbers via data attributes and CSS, so we need JS to
+// handle clicks
 const addClickListenersToLineNumbers = () => {
+  const removeSelectedLineClass = () => {
+    Array.from(document.getElementsByClassName("selected-line")).forEach(
+      (element) => {
+        element.classList.remove("selected-line");
+      }
+    );
+  };
+
+  // Source
   Array.from(document.getElementsByClassName("prism-line")).forEach(
     (element) => {
       const lineNumber = element.getAttribute("data-line-number");
       element.addEventListener("click", () => {
-        Array.from(document.getElementsByClassName("selected-line")).forEach(
-          (otherElement) => {
-            otherElement.classList.remove("selected-line");
-          }
-        );
+        removeSelectedLineClass();
         element.classList.add("selected-line");
-        window.location.hash = `L${lineNumber}`;
+        window.history.pushState(null, "", `#L${lineNumber}`)
+      });
+    }
+  );
+  // Diff
+  Array.from(document.querySelectorAll(".diff-line > td.line-number")).forEach(
+    (element) => {
+      if (element.classList.contains("line-header")) return;
+
+      element.addEventListener("click", () => {
+        removeSelectedLineClass();
+        element.parentElement?.classList.add("selected-line");
+        // window.location.hash = element.parentElement?.id || "";
+        window.history.pushState(null, "", `#${element.parentElement?.id}`)
       });
     }
   );
@@ -52,7 +72,7 @@ const hooks = {
       if (window.location.hash) {
         const target = document.getElementById(window.location.hash.slice(1));
         target?.classList.add("selected-line");
-        target?.scrollIntoView();
+        target?.scrollIntoView({ block: "center" });
       }
     },
     updated() {
@@ -79,7 +99,9 @@ window.addEventListener("phx:page-loading-stop", () => NProgress.done());
 liveSocket.connect();
 
 // expose liveSocket on window for web console debug logs and latency simulation:
-// >> liveSocket.enableDebug()
-// >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
-// >> liveSocket.disableLatencySim()
+if (process.env.NODE_ENV === "development") {
+  liveSocket.enableDebug();
+  // liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
+  // liveSocket.disableLatencySim()
+}
 (window as any).liveSocket = liveSocket;

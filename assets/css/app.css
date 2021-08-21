@@ -145,8 +145,9 @@ a {
   content: attr(data-line-number);
 }
 .prism-line:target,
-.prism-line.selected-line {
-  @apply bg-blue-900;
+.prism-line.selected-line,
+.diff-line.selected-line {
+  @apply bg-blue-900 !important;
 }
 
 .diff-line {
@@ -156,7 +157,7 @@ a {
   @apply text-gray-400 select-none;
 }
 .diff-line > .line-number {
-  @apply px-2 select-none min-w-max;
+  @apply px-2 select-none min-w-max cursor-pointer;
 }
 .diff-line > .line-type {
   @apply pl-1 pr-2 select-none text-gray-300;
