@@ -12,7 +12,7 @@ defmodule Xray.Source do
   @registry Application.compile_env!(:xray, :registry)
   @topic inspect(__MODULE__)
 
-  @spec get_storage_key(String.t(), String.t(), String.t()) :: String.t()
+  @spec get_storage_key(registry, package, version) :: String.t()
   def get_storage_key(registry, package, version) do
     "#{registry}/#{package}/#{version}"
   end

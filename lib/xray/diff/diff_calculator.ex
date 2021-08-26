@@ -82,8 +82,6 @@ defmodule Xray.Diff.DiffCalculator do
     diff_path = Path.join(tmp_dir, "diff.txt")
     Logger.debug("Calling git diff on #{from_path} and #{to_path}")
 
-    File.mkdir_p!(Path.dirname(diff_path))
-
     case System.cmd(
            "git",
            [

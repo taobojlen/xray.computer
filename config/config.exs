@@ -32,7 +32,12 @@ config :ex_aws,
 config :xray, Oban,
   repo: Xray.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [source_fetcher: 5, package_list_fetcher: 1, diff: 1]
+  queues: [
+    source_fetcher: 5,
+    source_formatter: 1,
+    package_list_fetcher: 1,
+    diff: 1
+  ]
 
 # Configures the endpoint
 config :xray, XrayWeb.Endpoint,

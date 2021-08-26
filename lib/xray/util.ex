@@ -3,12 +3,10 @@ defmodule Xray.Util do
   def tmp_path(prefix \\ "") do
     tmp_folder = Path.join([System.tmp_dir!(), "xray"])
 
-    if !File.dir?(tmp_folder) do
-      File.mkdir!(tmp_folder)
-    end
-
     random_string = Base.encode16(:crypto.strong_rand_bytes(4))
-    Path.join([tmp_folder, prefix <> random_string])
+    directory = Path.join([tmp_folder, prefix <> random_string])
+    File.mkdir_p!(directory)
+    directory
   end
 
   @doc """

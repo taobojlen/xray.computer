@@ -29,4 +29,9 @@ defmodule Xray.Registry.Behaviour do
   Returns the (temporary) path at which it was saved, and the path of a compressed tarball.
   """
   @callback get_source(package, version) :: {:ok, String.t(), String.t()} | {:error, String.t()}
+
+  @doc """
+  Formats a single file, in-place, using a standard formatter from the language.
+  """
+  @callback format(String.t()) :: :ok | {:error, String.t()}
 end

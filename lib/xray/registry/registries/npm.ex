@@ -6,6 +6,8 @@ defmodule Xray.Registry.Npm do
   alias Xray.{Registry, Util}
   alias Xray.Packages.{Package, Version}
 
+  require Logger
+
   @behaviour Registry.Behaviour
 
   @api Application.compile_env!(:xray, :npm_api)
@@ -63,7 +65,7 @@ defmodule Xray.Registry.Npm do
   @impl true
   # sobelow_skip ["Traversal"]
   def get_source(package, version) do
-    tarball_path = Util.tmp_path("tarball")
+    tarball_path = Path.join([Util.tmp_path(), "tarball.tgz"])
 
     with {:ok, url} <- get_tarball_url(package, version) do
       File.touch!(tarball_path)
@@ -73,10 +75,27 @@ defmodule Xray.Registry.Npm do
       |> Stream.run()
 
       folder_path = Util.tmp_path("package")
-      File.mkdir!(folder_path)
       Util.extract_tgz(tarball_path, folder_path)
 
       {:ok, folder_path, tarball_path}
+    end
+  end
+
+  @impl true
+  def format(path) do
+    Logger.debug("npx prettier --write #{path}")
+
+    case System.cmd(
+           "npx",
+           [
+             "prettier",
+             "--write",
+             path
+           ],
+           stderr_to_stdout: true
+         ) do
+      {_result, 0} -> :ok
+      {output, _exit_code} -> {:error, output}
     end
   end
 

@@ -36,7 +36,8 @@ RUN mix do compile, release
 
 # prepare release image
 FROM alpine:3.13.5 AS app
-RUN apk add --no-cache openssl ncurses-libs bash libstdc++ git curl
+RUN apk add --no-cache openssl ncurses-libs bash libstdc++ git curl npm
+RUN npm install -g prettier@2.3.2
 
 WORKDIR /app
 
