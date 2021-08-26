@@ -60,6 +60,12 @@ defmodule Xray.Registry do
     impl.get_source(package, version)
   end
 
+  @impl true
+  def format(registry, path) do
+    impl = get_registry(registry)
+    impl.format(path)
+  end
+
   defp get_registry(registry) do
     Map.get(@registries, registry)
   end
@@ -79,5 +85,6 @@ defmodule Xray.Registry do
     @callback get_versions(registry, package) :: {:ok, [Version.t()]} | {:error, String.t()}
     @callback get_source(registry, package, version) ::
                 {:ok, String.t(), String.t()} | {:error, String.t()}
+    @callback format(registry, String.t()) :: :ok | {:error, term()}
   end
 end

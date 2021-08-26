@@ -1,7 +1,7 @@
 defmodule Xray.Registry.NpmTest do
   use ExUnit.Case, async: true
 
-  alias Xray.Api
+  alias Xray.{Api, Util}
   alias Xray.Packages.Version
   alias Xray.Registry.Npm
 
@@ -58,6 +58,22 @@ defmodule Xray.Registry.NpmTest do
       with {:ok, changeset} <- Npm.get_package("lodash") do
         assert changeset.valid?
       end
+    end
+  end
+
+  describe "format" do
+    test "it uses prettier to format" do
+      path = Path.join([Util.tmp_path(), "example.js"])
+      File.cp!("test/data/npm/example.js", path)
+      expected = File.read!("test/data/npm/example.formatted.js")
+
+      with :ok <- Npm.format(path) do
+        new_content = File.read!(path)
+
+        assert expected == new_content
+      end
+
+      File.rm!(path)
     end
   end
 end

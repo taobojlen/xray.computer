@@ -2,6 +2,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "../node_modules/tippy.js/dist/tippy.css";
 @import "../node_modules/nprogress/nprogress.css";
 @import "./coldark.css";
 
@@ -32,6 +33,11 @@ iframe[src="/phoenix/live_reload/frame"] {
 
 a {
   @apply underline;
+}
+
+input:checked ~ .dot {
+  @apply bg-blue-500;
+  transform: translateX(100%);
 }
 
 .suggestion-button {
@@ -68,12 +74,11 @@ a {
 }
 
 .code-block {
-  @apply text-sm p-0 overflow-x-auto rounded;
+  @apply text-sm p-0 overflow-x-auto rounded max-w-6xl;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  max-width: 70rem;
 }
 
 .loading-spinner {

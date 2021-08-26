@@ -1,14 +1,16 @@
 defmodule XrayWeb.ViewSourceLive do
   use Surface.LiveView
-  alias XrayWeb.Components.{FileSelect, MainPage, SourceCode, SourceLoadingBar}
-  alias XrayWeb.Router.Helpers
+  alias XrayWeb.Components.{ErrorCallout, FileSelect, MainPage, SourceCode, SourceLoadingBar}
 
   alias Xray.{Packages, Source, Storage, Util}
+  alias Xray.Source.FormattedSource
+  alias XrayWeb.Router.Helpers, as: Routes
 
   data page_title, :string
   data registry, :string
   data package, :string
   data version, :string
+  data version_id, :number
   data loading, :boolean, default: true
   data progress, :decimal, default: 1
   # TODO: show error to user
@@ -20,6 +22,8 @@ defmodule XrayWeb.ViewSourceLive do
   data code, :string, default: nil
   data uri_hash, :string, default: nil
   data released_at, :datetime, default: nil
+  data viewing_formatted, :boolean, default: false
+  data loading_formatted, :boolean, default: false
 
   @impl true
   def mount(
@@ -48,7 +52,11 @@ defmodule XrayWeb.ViewSourceLive do
       |> assign(page_title: "#{package} #{version}")
       |> assign_released_at()
 
-    {:ok, socket}
+    if params["format"] == "true" do
+      {:ok, assign(socket, viewing_formatted: true, loading_formatted: true)}
+    else
+      {:ok, socket}
+    end
   end
 
   @impl true
@@ -80,11 +88,18 @@ defmodule XrayWeb.ViewSourceLive do
         <FileSelect
           files={Map.keys(@files)}
           current_file={@current_file}
+          viewing_formatted={@viewing_formatted}
+          loading_formatted={@loading_formatted}
           select_file="select_file"
+          toggle_formatted="toggle_formatted"
         />
+        <div :if={@error != nil} class="mx-auto max-w-4xl my-4">
+          <ErrorCallout text={@error} />
+        </div>
         <SourceCode
           code={@code}
           file_type={@file_type}
+          loading_formatted={@loading_formatted}
         />
       </div>
     </MainPage>
@@ -95,27 +110,27 @@ defmodule XrayWeb.ViewSourceLive do
   def handle_event(
         "select_file",
         %{"file" => filename},
-        %{assigns: %{registry: registry, package: package, version: version, files: files}} =
-          socket
+        socket
       ) do
-    content =
-      files
-      |> Map.get(filename)
-      |> maybe_get_file_content()
+    select_file(filename, socket)
+  end
 
-    socket =
-      assign(
-        socket,
-        code: content,
-        current_file: filename,
-        file_type: get_file_extension(filename)
-      )
+  @impl true
+  def handle_event(
+        "toggle_formatted",
+        %{"formatted" => "true"},
+        socket
+      ) do
+    fetch_formatted(socket)
+  end
 
-    {:noreply,
-     push_patch(socket,
-       to: Helpers.view_source_path(socket, :index, registry, package, version, filename),
-       replace: true
-     )}
+  @impl true
+  def handle_event(
+        "toggle_formatted",
+        %{"_target" => _target},
+        %{assigns: %{current_file: filename}} = socket
+      ) do
+    select_file(filename, socket)
   end
 
   @impl true
@@ -150,12 +165,14 @@ defmodule XrayWeb.ViewSourceLive do
             registry: registry,
             package: package,
             version: version,
-            uri_hash: uri_hash
+            uri_hash: uri_hash,
+            loading_formatted: loading_formatted
           }
         } = socket
       ) do
     files_list_key = Packages.get_version!(version_id).source_key
 
+    # TODO: fetch this just once initially
     files =
       Storage.get(files_list_key)
       |> Jason.decode!()
@@ -187,9 +204,115 @@ defmodule XrayWeb.ViewSourceLive do
       |> assign(code: content)
       |> assign(file_type: file_type)
       |> assign(loading: false)
+      |> assign(version_id: version_id)
       |> assign_released_at()
 
-    destination = Helpers.view_source_path(socket, :index, registry, package, version, filename)
+    destination = Routes.view_source_path(socket, :index, registry, package, version, filename)
+
+    destination =
+      if is_nil(uri_hash) do
+        destination
+      else
+        "#{destination}##{uri_hash}"
+      end
+
+    # If loading_formatted, it means that this was the initial visit to a URL with
+    # ?format=true. Now that we have the files list, etc., we can format the code
+    if loading_formatted do
+      fetch_formatted(socket)
+    else
+      {:noreply,
+       push_patch(socket,
+         to: destination,
+         replace: true
+       )}
+    end
+  end
+
+  @impl true
+  def handle_info(
+        {FormattedSource, _version_id, _file_key, :error},
+        %{
+          assigns: %{
+            registry: registry,
+            package: package,
+            version: version,
+            current_file: filename
+          }
+        } = socket
+      ) do
+    socket =
+      socket
+      |> assign(error: "Could not format file.")
+      |> assign(loading_formatted: false)
+      |> assign(viewing_formatted: false)
+
+    {:noreply,
+     push_patch(socket,
+       to: Routes.view_source_path(socket, :index, registry, package, version, filename),
+       replace: true
+     )}
+  end
+
+  @impl true
+  def handle_info(
+        {FormattedSource, _version_id, _file_key, formatted_source},
+        socket
+      ) do
+    {:noreply, assign(socket, code: formatted_source, loading_formatted: false)}
+  end
+
+  defp select_file(
+         filename,
+         %{assigns: %{registry: registry, package: package, version: version, files: files}} =
+           socket
+       ) do
+    content =
+      files
+      |> Map.get(filename)
+      |> maybe_get_file_content()
+
+    socket =
+      assign(
+        socket,
+        code: content,
+        current_file: filename,
+        file_type: get_file_extension(filename),
+        viewing_formatted: false,
+        error: nil
+      )
+
+    {:noreply,
+     push_patch(socket,
+       to: Routes.view_source_path(socket, :index, registry, package, version, filename),
+       replace: true
+     )}
+  end
+
+  defp fetch_formatted(
+         %{
+           assigns: %{
+             registry: registry,
+             package: package,
+             version: version,
+             current_file: filename,
+             version_id: version_id,
+             files: files,
+             uri_hash: uri_hash
+           }
+         } = socket
+       ) do
+    file_key = Map.get(files, filename)
+    FormattedSource.subscribe(version_id, file_key)
+    Task.start_link(fn -> FormattedSource.get_formatted_file(version_id, file_key) end)
+
+    socket =
+      socket
+      |> assign(loading_formatted: true)
+      |> assign(viewing_formatted: true)
+
+    destination =
+      Routes.view_source_path(socket, :index, registry, package, version, filename, format: true)
 
     destination =
       if is_nil(uri_hash) do

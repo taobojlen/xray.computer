@@ -7,10 +7,11 @@ import { LiveSocket } from "phoenix_live_view";
 
 import Prism from "prismjs";
 import Alpine from "alpinejs";
+import Tooltip from "@ryangjchandler/alpine-tooltip";
 import "focus-visible";
 
+Alpine.plugin(Tooltip);
 (window as any).Alpine = Alpine;
-
 Alpine.start();
 
 Prism.hooks.add("lines-register", (env) => {
@@ -42,7 +43,7 @@ const addClickListenersToLineNumbers = () => {
       element.addEventListener("click", () => {
         removeSelectedLineClass();
         element.classList.add("selected-line");
-        window.history.pushState(null, "", `#L${lineNumber}`)
+        window.history.pushState(null, "", `#L${lineNumber}`);
       });
     }
   );
@@ -55,7 +56,7 @@ const addClickListenersToLineNumbers = () => {
         removeSelectedLineClass();
         element.parentElement?.classList.add("selected-line");
         // window.location.hash = element.parentElement?.id || "";
-        window.history.pushState(null, "", `#${element.parentElement?.id}`)
+        window.history.pushState(null, "", `#${element.parentElement?.id}`);
       });
     }
   );
@@ -99,9 +100,9 @@ window.addEventListener("phx:page-loading-stop", () => NProgress.done());
 liveSocket.connect();
 
 // expose liveSocket on window for web console debug logs and latency simulation:
-if (process.env.NODE_ENV === "development") {
-  liveSocket.enableDebug();
-  // liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
-  // liveSocket.disableLatencySim()
-}
+// if (process.env.NODE_ENV === "development") {
+//   liveSocket.enableDebug();
+//   liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
+//   // liveSocket.disableLatencySim()
+// }
 (window as any).liveSocket = liveSocket;
