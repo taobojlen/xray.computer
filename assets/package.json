@@ -3,8 +3,10 @@
   "description": " ",
   "license": "MIT",
   "scripts": {
-    "deploy": "NODE_ENV=production webpack --mode production",
-    "watch": "webpack --mode development --watch"
+    "build:css": "postcss css/app.css -o ../priv/static/assets/app.css",
+    "watch:css": "npm run build:css -- --watch",
+    "watch:ts": "tsc --noEmit --watch",
+    "watch": "concurrently 'npm:watch:*'"
   },
   "dependencies": {
     "@ryangjchandler/alpine-tooltip": "^0.2.0",
@@ -28,11 +30,14 @@
     "autoprefixer": "^10.3.1",
     "babel-loader": "^8.0.0",
     "babel-plugin-prismjs": "^2.1.0",
+    "concurrently": "^6.2.1",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.2.0",
     "css-minimizer-webpack-plugin": "^3.0.2",
+    "cssnano": "^5.0.8",
     "mini-css-extract-plugin": "^2.2.0",
     "postcss": "^8.3.6",
+    "postcss-cli": "^8.3.1",
     "postcss-focus-visible": "^5.0.0",
     "postcss-import": "^14.0.2",
     "postcss-loader": "^6.1.1",
