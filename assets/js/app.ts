@@ -1,5 +1,3 @@
-import "../css/app.css";
-
 import "phoenix_html";
 import { Socket } from "phoenix";
 import NProgress from "nprogress";
@@ -90,6 +88,14 @@ let csrfToken = document
 let liveSocket = new LiveSocket("/live", Socket, {
   hooks,
   params: { _csrf_token: csrfToken },
+  dom: {
+    onBeforeElUpdated(from, to) {
+      if ((from as any)._x_dataStack) {
+        (window as any).Alpine.clone(from, to);
+      }
+      return true
+    },
+  }
 });
 
 // Show progress bar on live navigation and form submits
