@@ -118,6 +118,10 @@ defmodule XrayWeb.SelectDiffLive do
       |> assign(version_from: nil)
       |> assign(version_to: nil)
       |> assign(versions: [])
+      |> assign(versions_from: [])
+      |> assign(versions_to: [])
+      |> assign(version_from: nil)
+      |> assign(version_to: nil)
 
     {:noreply, socket}
   end

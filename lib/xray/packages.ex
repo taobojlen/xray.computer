@@ -114,6 +114,10 @@ defmodule Xray.Packages do
     Package.changeset(package, attrs)
   end
 
+  def get_package_versions(%Package{} = package) do
+    Repo.all(from(v in Version, where: v.package_id == ^package.id))
+  end
+
   @doc """
   Returns the list of versions.
 

@@ -26,7 +26,7 @@ defmodule XrayWeb.Components.PackageSearchField do
         placeholder="Search for a package"
         autocomplete="off"
         autofocus="true"
-        phx-debounce="300"
+        phx-debounce="500"
         class="block p-2 mb-4 w-72 rounded shadow border border-gray-300"
       />
       <div :if={not Enum.empty?(@suggestions)} class="w-72">
