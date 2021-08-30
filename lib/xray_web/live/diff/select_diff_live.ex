@@ -3,7 +3,7 @@ defmodule XrayWeb.SelectDiffLive do
   alias Surface.Components.LiveRedirect
   alias XrayWeb.Components.MainPage
 
-  alias Xray.{Util, VersionListFetcher}
+  alias Xray.{Packages, Util, VersionListFetcher}
   alias XrayWeb.Endpoint
   alias XrayWeb.Router.Helpers
   alias XrayWeb.Components.{LoadingSpinner, MainPage, PackageSearchField, VersionSelect}
@@ -96,17 +96,25 @@ defmodule XrayWeb.SelectDiffLive do
   """
   @impl true
   def handle_info(
-        {:select_package, package},
+        {:select_package, package_name},
         %{assigns: %{package: current_package, registry: registry}} = socket
       ) do
-    VersionListFetcher.unsubscribe(registry, current_package)
-    VersionListFetcher.subscribe(registry, package)
-    Task.start_link(fn -> VersionListFetcher.get_versions(registry, package) end)
+    package = Packages.get_package_by(name: package_name, registry: registry)
+
+    socket =
+      if package != nil do
+        VersionListFetcher.unsubscribe(registry, current_package)
+        VersionListFetcher.subscribe(registry, package_name)
+        Task.start_link(fn -> VersionListFetcher.get_versions(registry, package) end)
+
+        assign(socket, loading_versions: true)
+      else
+        socket
+      end
 
     socket =
       socket
-      |> assign(package: package)
-      |> assign(loading_versions: true)
+      |> assign(package: package_name)
       |> assign(version_from: nil)
       |> assign(version_to: nil)
       |> assign(versions: [])

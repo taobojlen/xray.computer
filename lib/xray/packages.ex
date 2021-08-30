@@ -45,6 +45,10 @@ defmodule Xray.Packages do
   """
   def get_package!(id), do: Repo.get!(Package, id)
 
+  def get_package_by(attrs \\ %{}) do
+    Repo.get_by(Package, attrs)
+  end
+
   @doc """
   Creates a package.
 

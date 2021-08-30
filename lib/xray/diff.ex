@@ -19,4 +19,10 @@ defmodule Xray.Diff do
             v_to.version == ^version_to
     )
   end
+
+  def create_diff(attrs \\ %{}) do
+    %Diff{}
+    |> Diff.changeset(attrs)
+    |> Repo.insert()
+  end
 end

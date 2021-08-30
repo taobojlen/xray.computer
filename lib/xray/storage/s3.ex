@@ -18,12 +18,18 @@ defmodule Xray.Storage.S3 do
 
   @impl true
   def list(prefix) do
-    S3.list_objects(@bucket, prefix: prefix) |> ExAws.request!()
+    case S3.list_objects(@bucket, prefix: prefix) |> ExAws.request!() do
+      %{status_code: 200} -> :ok
+      %{body: error} -> {:error, error}
+    end
   end
 
   @impl true
   def put(key, content) do
-    S3.put_object(@bucket, key, content) |> ExAws.request!()
+    case S3.put_object(@bucket, key, content) |> ExAws.request!() do
+      %{status_code: 200} -> :ok
+      %{body: error} -> {:error, error}
+    end
   end
 
   @impl true
