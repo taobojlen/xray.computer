@@ -17,11 +17,6 @@ defmodule Xray.Source do
     "#{registry}/#{package}/#{version}"
   end
 
-  @spec get_files_list_key(String.t(), String.t(), String.t()) :: String.t()
-  def get_files_list_key(registry, package, version) do
-    "files_lists/#{registry}/#{package}/#{version}.json"
-  end
-
   @spec get_topic(registry, package, version) :: String.t()
   def get_topic(registry, package, version) do
     @topic <> "#{registry}-#{package}-#{version}"
@@ -91,7 +86,7 @@ defmodule Xray.Source do
   defp get_package_and_version(registry, package_name, version_name) do
     with {:ok, package} <- get_package(registry, package_name),
          {:ok, version} <- get_version(registry, package, version_name) do
-      if is_nil(version.source_key) do
+      if is_nil(version.files) do
         %{id: version.id}
         |> SourceFetcher.new()
         |> Oban.insert()

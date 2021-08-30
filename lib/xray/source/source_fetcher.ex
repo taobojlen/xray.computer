@@ -39,8 +39,8 @@ defmodule Xray.Source.SourceFetcher do
     )
 
     case store_files(package, version) do
-      {:ok, files_list_key, tarball_key} ->
-        Packages.update_version(version, %{source_key: files_list_key, tarball_key: tarball_key})
+      {:ok, files, tarball_key} ->
+        Packages.update_version(version, %{files: files, tarball_key: tarball_key})
 
         Source.notify_found_source(
           package.registry,
@@ -103,7 +103,7 @@ defmodule Xray.Source.SourceFetcher do
             Map.put(acc, filename, key)
           end)
 
-        {:ok, save_files_list(files, package, version), tarball_key}
+        {:ok, files, tarball_key}
 
       {:error, error} ->
         {:error, error}
@@ -125,13 +125,6 @@ defmodule Xray.Source.SourceFetcher do
   def handle_info({:got_file_count, count}, state) do
     state = Map.put(state, :total_files, count)
     {:noreply, state}
-  end
-
-  defp save_files_list(files, package, version) do
-    content = Jason.encode!(files)
-    key = Source.get_files_list_key(package.registry, package.name, version.version)
-    Storage.put(key, content)
-    key
   end
 
   defp get_storage_key(package, version, filename) do

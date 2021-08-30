@@ -5,9 +5,8 @@ defmodule Xray.Packages.Version do
   schema "versions" do
     field :released_at, :utc_datetime
     field :version, :string
-    field :source_key, :string
+    field :files, :map
     field :tarball_key, :string
-    field :tarball_url, :string
     belongs_to :package, Xray.Packages.Package
 
     timestamps()
@@ -16,7 +15,7 @@ defmodule Xray.Packages.Version do
   @doc false
   def changeset(version, attrs) do
     version
-    |> cast(attrs, [:version, :released_at, :source_key, :tarball_key, :tarball_url])
+    |> cast(attrs, [:version, :released_at, :files, :tarball_key])
     |> validate_required([:version])
   end
 end
