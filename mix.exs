@@ -61,7 +61,6 @@ defmodule Xray.MixProject do
       {:ex_machina, "~> 2.6", only: :test},
       {:faker, "~> 0.16.0", only: :test},
       {:sobelow, "~> 0.11.0", only: [:dev, :test]},
-      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:quantum, "~> 3.3"},
       {:jaxon, "~> 2.0"},
       {:cachex, "~> 3.3"},
@@ -87,11 +86,6 @@ defmodule Xray.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": [
-        "cmd --cd assets npm run build:css",
-        "esbuild default --minify",
-        "phx.digest"
-      ]
     ]
   end
 end

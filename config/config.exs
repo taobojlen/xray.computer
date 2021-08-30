@@ -7,14 +7,6 @@
 # General application configuration
 use Mix.Config
 
-config :esbuild,
-  version: "0.12.18",
-  default: [
-    args: ~w(js/app.ts --bundle --target=es6 --outdir=../priv/static/assets),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-  ]
-
 config :xray,
   ecto_repos: [Xray.Repo],
   tmp_dir: "/tmp/xray",

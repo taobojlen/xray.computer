@@ -30,7 +30,8 @@ RUN npm --prefix ./assets ci --progress=false --no-audit --loglevel=error
 
 COPY priv priv
 COPY assets assets
-RUN mix do assets.deploy, phx.digest
+RUN npm run --prefix ./assets deploy \
+  && mix phx.digest
 
 # compile and build release
 # uncomment COPY if rel/ exists

@@ -4,8 +4,5 @@ module.exports = {
     tailwindcss: {},
     "postcss-focus-visible": {},
     autoprefixer: {},
-    cssnano: {
-      preset: "default",
-    },
   },
 }
