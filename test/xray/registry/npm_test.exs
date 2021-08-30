@@ -14,7 +14,7 @@ defmodule Xray.Registry.NpmTest do
       Api.MockNpm
       |> expect(:get_stream!, fn _ -> File.stream!("test/data/npm/all_docs.json") end)
 
-      with packages <- Npm.get_packages!() do
+      with packages <- Npm.get_packages!() |> Enum.to_list() do
         package_set = MapSet.new(packages)
 
         # Assert that packages were read correctly, and that

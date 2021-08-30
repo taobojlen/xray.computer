@@ -19,7 +19,6 @@ defmodule Xray.Registry.Npm do
     @api.get_stream!("https://replicate.npmjs.com/_all_docs")
     |> Jaxon.Stream.from_enumerable()
     |> Jaxon.Stream.query(path)
-    |> Enum.to_list()
   end
 
   @impl true
