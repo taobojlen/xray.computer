@@ -13,7 +13,6 @@ defmodule XrayWeb.ViewSourceLive do
   data version_id, :number
   data loading, :boolean, default: true
   data progress, :decimal, default: 1
-  # TODO: show error to user
   data error, :string, default: nil
   data filename, :string, default: nil
   data files, :map, default: %{}
@@ -170,12 +169,7 @@ defmodule XrayWeb.ViewSourceLive do
           }
         } = socket
       ) do
-    files_list_key = Packages.get_version!(version_id).source_key
-
-    # TODO: fetch this just once initially
-    files =
-      Storage.get(files_list_key)
-      |> Jason.decode!()
+    files = Packages.get_version!(version_id).files
 
     files_list =
       files
