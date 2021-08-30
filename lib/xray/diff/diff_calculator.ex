@@ -4,8 +4,8 @@ defmodule Xray.Diff.DiffCalculator do
     unique: [period: :infinity]
 
   require Logger
-  alias Xray.{Packages, Repo, Storage, Util}
-  alias Xray.Diff.{Diff, DiffServer}
+  alias Xray.{Diff, Packages, Storage, Util}
+  alias Xray.Diff.DiffServer
 
   def perform(%Oban.Job{args: %{"from_id" => from_id, "to_id" => to_id}}) do
     version_from = Packages.get_version!(from_id)
@@ -22,20 +22,20 @@ defmodule Xray.Diff.DiffCalculator do
     # caching could help.
     from_path = download_files(version_from.tarball_key)
     to_path = download_files(version_to.tarball_key)
+    key = get_diff_key(package.registry, package.name, version_from.version, version_to.version)
 
     with {:ok, diff_path} <- git_diff(from_path, to_path),
-         {:ok, raw_diff} <- File.read(diff_path) do
-      key = get_diff_key(package.registry, package.name, version_from.version, version_to.version)
-      Storage.put(key, raw_diff)
+         {:ok, raw_diff} <- File.read(diff_path),
+         :ok <- Storage.put(key, raw_diff),
+         {:ok, _diff_struct} <-
+           Diff.create_diff(%{
+             storage_key: key,
+             version_from_id: from_id,
+             version_to_id: to_id,
+             from_path: from_path,
+             to_path: to_path
+           }) do
       File.rm_rf!(Path.dirname(diff_path))
-
-      Repo.insert!(%Diff{
-        storage_key: key,
-        version_from_id: from_id,
-        version_to_id: to_id,
-        from_path: from_path,
-        to_path: to_path
-      })
 
       DiffServer.notify_success(
         package.registry,
