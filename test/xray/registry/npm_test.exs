@@ -5,7 +5,7 @@ defmodule Xray.Registry.NpmTest do
   alias Xray.Packages.Version
   alias Xray.Registry.Npm
 
-  import Mox
+  import Hammox
 
   setup :verify_on_exit!
 
@@ -29,7 +29,8 @@ defmodule Xray.Registry.NpmTest do
     test "it handles existing versions" do
       Api.MockNpm
       |> expect(:get, fn _ ->
-        {:ok, %{body: File.read!("test/data/npm/lodash.json") |> Jason.decode!()}}
+        {:ok,
+         File.read!("test/data/npm/lodash.json") |> Jason.decode!() |> create_fake_response()}
       end)
 
       with {:ok, versions} <- Npm.get_versions("lodash") do
@@ -52,7 +53,8 @@ defmodule Xray.Registry.NpmTest do
       Api.MockNpm
       # called once to get metadata, once to get versions
       |> expect(:get, 2, fn _ ->
-        {:ok, %{body: File.read!("test/data/npm/lodash.json") |> Jason.decode!()}}
+        {:ok,
+         File.read!("test/data/npm/lodash.json") |> Jason.decode!() |> create_fake_response()}
       end)
 
       with {:ok, changeset} <- Npm.get_package("lodash") do
@@ -75,5 +77,13 @@ defmodule Xray.Registry.NpmTest do
 
       File.rm!(path)
     end
+  end
+
+  defp create_fake_response(body) do
+    %HTTPoison.Response{
+      body: body,
+      request: %HTTPoison.Request{url: "http://localhost"},
+      status_code: 200
+    }
   end
 end

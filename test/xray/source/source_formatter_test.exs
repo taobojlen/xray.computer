@@ -1,7 +1,7 @@
 defmodule Xray.Source.SourceFormatterTest do
   use Xray.DataCase
   use Oban.Testing, repo: Xray.Repo
-  import Mox
+  import Hammox
   alias Xray.Source
 
   describe "perform" do
