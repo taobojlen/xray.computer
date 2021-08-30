@@ -61,7 +61,7 @@ defmodule Xray.Diff.DiffCalculator do
 
   defp download_files(tarball_key) do
     destination_dir = Util.tmp_path()
-    tarball_path = Util.tmp_path("tarball")
+    tarball_path = Path.join([Util.tmp_path(), "tarball.tgz"])
 
     try do
       Storage.get_to_filesystem(tarball_key, tarball_path)
