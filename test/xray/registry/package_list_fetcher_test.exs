@@ -1,7 +1,7 @@
 defmodule Xray.Registry.PackageListFetcherTest do
   use Xray.DataCase
   use Oban.Testing, repo: Xray.Repo
-  import Mox
+  import Hammox
   alias Xray.{Packages, Registry}
 
   describe "perform" do

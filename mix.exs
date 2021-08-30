@@ -56,7 +56,7 @@ defmodule Xray.MixProject do
       {:httpoison, "~> 1.8"},
       {:oban, "~> 2.4"},
       {:credo, "~> 1.5", only: [:dev, :test]},
-      {:mox, "~> 1.0", only: :test},
+      {:hammox, "~> 0.5", only: :test},
       {:excoveralls, "~> 0.13.4", only: :test},
       {:ex_machina, "~> 2.6", only: :test},
       {:faker, "~> 0.16.0", only: :test},

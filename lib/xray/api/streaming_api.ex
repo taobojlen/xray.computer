@@ -29,6 +29,6 @@ defmodule Xray.Api.StreamingApi do
   end
 
   defmodule Contract do
-    @callback get_stream!(String.t()) :: Stream.t()
+    @callback get_stream!(String.t()) :: Enumerable.t()
   end
 end

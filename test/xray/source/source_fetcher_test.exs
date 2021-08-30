@@ -2,7 +2,7 @@ defmodule Xray.Source.SourceFetcherTest do
   use Xray.DataCase
   use Oban.Testing, repo: Xray.Repo
   import Xray.Factory
-  import Mox
+  import Hammox
   alias Xray.Source
 
   describe "perform" do
