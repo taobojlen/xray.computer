@@ -7,6 +7,7 @@ Xray expects the following environment variables:
 - `SECRET_KEY_BASE` for Phoenix (generate with `mix phx.gen.secret`)
 - `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` if using S3 for file storage
 - `HONEYBADGER_API_KEY` if using Honeybadger for error tracking
+- `ADMIN_PASSWORD` to access the LiveDashboard
 
 # Developing
 
