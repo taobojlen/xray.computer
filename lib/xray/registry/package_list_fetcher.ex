@@ -8,11 +8,10 @@ defmodule Xray.Registry.PackageListFetcher do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"registry" => registry}}) do
-    packages = @registry.get_packages!(registry)
-
-    packages
-    |> Enum.chunk_every(1000)
-    |> Enum.each(fn chunk -> insert_packages(chunk, registry) end)
+    @registry.get_packages!(registry)
+    |> Stream.chunk_every(1000)
+    |> Stream.each(fn chunk -> chunk |> Enum.to_list() |> insert_packages(registry) end)
+    |> Stream.run()
 
     if @mix_env == :prod do
       HTTPoison.get("https://api.honeybadger.io/v1/check_in/j6IALq")
